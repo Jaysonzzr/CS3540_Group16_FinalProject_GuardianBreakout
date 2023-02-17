@@ -4,30 +4,39 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    Transform playerBody;
-    public float mouseSensitivity = 200;
-    float pitch = 0;
+    public GameObject player;
+    Vector3 offset;
+    public float sensitivity = 2.0f;
+    public float smoothing = 2.0f;
 
-    // Start is called before the first frame update
+    private Vector2 mouseLook;
+    private Vector2 smoothV;
+
+    // Use this for initialization
     void Start()
     {
-        playerBody = transform.parent.transform;
-
-        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        offset = transform.position - player.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float moveX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float moveY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        // Get the mouse input and calculate the camera movement
+        Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+        mouseDelta = Vector2.Scale(mouseDelta, new Vector2(sensitivity * smoothing, sensitivity * smoothing));
+        smoothV.x = Mathf.Lerp(smoothV.x, mouseDelta.x, 1f / smoothing);
+        smoothV.y = Mathf.Lerp(smoothV.y, mouseDelta.y, 1f / smoothing);
+        mouseLook += smoothV;
 
-        // yaw
-        playerBody.Rotate(Vector3.up * moveX);
+        // Clamp the vertical camera movement to prevent flipping
+        mouseLook.y = Mathf.Clamp(mouseLook.y, -90f, 90f);
 
-        pitch -= moveY;
+        // Apply the camera rotation
+        transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
+        player.transform.localRotation = Quaternion.AngleAxis(mouseLook.x, player.transform.up);
 
-        transform.localRotation = Quaternion.Euler(pitch, 0, 0);
+        // Move the camera to follow the player
+        transform.position = player.transform.position + offset;
     }
 }
