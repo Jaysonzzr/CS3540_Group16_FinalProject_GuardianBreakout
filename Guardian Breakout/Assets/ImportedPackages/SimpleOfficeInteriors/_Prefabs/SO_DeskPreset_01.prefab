@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 401660}
   - component: {fileID: 3336182}
   - component: {fileID: 2333554}
+  - component: {fileID: 2222372973805028403}
   m_Layer: 0
   m_Name: SO_DeskPreset_01
   m_TagString: Untagged
@@ -83,3 +84,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &2222372973805028403
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 119520}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: b43e5f513a35c644393686d09ebf8da9, type: 3}
