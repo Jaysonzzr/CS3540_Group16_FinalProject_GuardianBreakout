@@ -5,7 +5,6 @@ public class ObjectInfoDisplay : MonoBehaviour
 {
     public Canvas myCanvas;
     public Text infoText;
-    public GameObject inventory;
     public PlayerController playerController;
     public CameraController cameraController;
     public float maxDistance = 5.0f; // Maximum distance at which object info will be displayed
@@ -33,12 +32,12 @@ public class ObjectInfoDisplay : MonoBehaviour
                         infoText.color = new Color(222/255f, 77/255f, 77/255f);
                     }
 
-                    GameObject obj = myCanvas.transform.Find("InventoryGroup").gameObject;
+                    GameObject obj = myCanvas.transform.Find(hitObject.name.ToString() + "Inventory").gameObject;
                     if (obj.activeSelf)
                     {
                         if (Input.GetKeyDown(KeyCode.E))
                         {
-                            inventory.SetActive(false);
+                            obj.SetActive(false);
                             infoText.enabled = true;
                             playerController.enabled = true;
                             cameraController.enabled = true;
@@ -50,7 +49,7 @@ public class ObjectInfoDisplay : MonoBehaviour
                     {
                         if (Input.GetKeyDown(KeyCode.E))
                         {
-                            inventory.SetActive(true);
+                            obj.SetActive(true);
                             infoText.enabled = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
