@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Breakable
+  - CellDoorF
+  - CellDoorB
+  - Friendly
+  - Unfriendly
   layers:
   - Default
   - TransparentFX
