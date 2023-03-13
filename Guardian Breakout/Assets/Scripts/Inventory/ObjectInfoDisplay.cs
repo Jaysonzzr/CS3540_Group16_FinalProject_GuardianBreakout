@@ -14,7 +14,15 @@ public class ObjectInfoDisplay : MonoBehaviour
 
     float currentProcess;
     bool opening = false;
+    bool locking = false;
     float coolDown = 0.1f;
+
+    GameObject player;
+
+    private void Start() 
+    {
+        player = GameObject.FindWithTag("Player");
+    }
 
     void Update()
     {
@@ -22,7 +30,8 @@ public class ObjectInfoDisplay : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
             GameObject hitObject = hit.transform.gameObject;
-            if (hitObject.CompareTag("Friendly") || hitObject.CompareTag("Unfriendly"))
+            if (hitObject.CompareTag("Friendly") || hitObject.CompareTag("Unfriendly") || hitObject.CompareTag("Bed") ||
+                hitObject.CompareTag("Shower") || hitObject.CompareTag("Exercise") || hitObject.CompareTag("Read"))
             {
                 float distance = Vector3.Distance(transform.position, hitObject.transform.position);
                 if (distance <= maxDistance)
@@ -33,7 +42,7 @@ public class ObjectInfoDisplay : MonoBehaviour
                     if (hitObject.CompareTag("Friendly"))
                     {
                         infoText.color = new Color(122/255f, 221/255f, 122/255f);
-                        GameObject obj = myCanvas.transform.Find(hitObject.name.ToString() + "Inventory").gameObject;
+                        GameObject obj = myCanvas.transform.Find("Inventories/" + hitObject.name.ToString() + "Inventory").gameObject;
                         if (obj.activeSelf)
                         {
                             if (Input.GetKeyDown(KeyCode.E))
@@ -61,10 +70,11 @@ public class ObjectInfoDisplay : MonoBehaviour
                             }
                         }
                     }
-                    else if (hitObject.CompareTag("Unfriendly"))
+                    
+                    if (hitObject.CompareTag("Unfriendly"))
                     {
                         infoText.color = new Color(222/255f, 77/255f, 77/255f);
-                        GameObject obj = myCanvas.transform.Find(hitObject.name.ToString() + "Inventory").gameObject;
+                        GameObject obj = myCanvas.transform.Find("Inventories/" + hitObject.name.ToString() + "Inventory").gameObject;
                         if (obj.activeSelf)
                         {
                             if (Input.GetKeyDown(KeyCode.E))
@@ -127,6 +137,70 @@ public class ObjectInfoDisplay : MonoBehaviour
                             }
                         }
                     }
+
+                    if (hitObject.CompareTag("Bed"))
+                    {
+                        infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                        infoText.enabled = true;
+
+                        if (Input.GetKeyDown(KeyCode.E))
+                        {
+                            player.GetComponent<CharacterController>().enabled = false;
+                            playerController.enabled = false;
+                            cameraController.enabled = false;
+                            
+                            Camera.main.transform.SetParent(hitObject.transform);
+                            Camera.main.transform.position = new Vector3(
+                                hitObject.transform.position.x, hitObject.transform.position.y + 1, hitObject.transform.position.z - 1.4f
+                            );
+                            Camera.main.transform.rotation = Quaternion.Euler(
+                                new Vector3(hitObject.transform.rotation.eulerAngles.x - 20,
+                                 hitObject.transform.rotation.eulerAngles.y, 
+                                 hitObject.transform.root.eulerAngles.z
+                                )
+                            );
+                            locking = true;
+                            coolDown = 0.1f;
+                        }
+                    }
+
+                    if (hitObject.CompareTag("Shower"))
+                    {
+                        infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                        infoText.enabled = true;
+                    }
+
+                    if (hitObject.CompareTag("Exercise"))
+                    {
+                        infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                        infoText.enabled = true;
+
+                        if (Input.GetKeyDown(KeyCode.E))
+                        {
+                            player.GetComponent<CharacterController>().enabled = false;
+                            playerController.enabled = false;
+                            cameraController.enabled = false;
+                            
+                            Camera.main.transform.SetParent(hitObject.transform);
+                            Camera.main.transform.position = new Vector3(
+                                hitObject.transform.position.x - 2.5f, hitObject.transform.position.y + 2, hitObject.transform.position.z - 0.16f
+                            );
+                            Camera.main.transform.rotation = Quaternion.Euler(
+                                new Vector3(hitObject.transform.rotation.eulerAngles.x + 15,
+                                 hitObject.transform.rotation.eulerAngles.y - 90, 
+                                 hitObject.transform.root.eulerAngles.z
+                                )
+                            );
+                            locking = true;
+                            coolDown = 0.1f;
+                        }
+                    }
+
+                    if (hitObject.CompareTag("Read"))
+                    {
+                        infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                        infoText.enabled = true;
+                    }
                 }
                 else
                 {
@@ -144,6 +218,23 @@ public class ObjectInfoDisplay : MonoBehaviour
         {
             // Clear the information text if the player isn't looking at anything
             infoText.text = "";
+        }
+
+        if (locking)
+        {
+            if (Input.GetKeyDown(KeyCode.E) && coolDown <= 0)
+            {
+                player.GetComponent<CharacterController>().enabled = true;
+                playerController.enabled = true;
+                cameraController.enabled = true;
+
+                Camera.main.transform.SetParent(player.transform);
+                locking = false;
+            }
+            else if (coolDown > 0)
+            {
+                coolDown -= Time.deltaTime;
+            }
         }
     }
 }

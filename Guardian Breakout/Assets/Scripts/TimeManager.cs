@@ -20,16 +20,16 @@ public class TimeManager : MonoBehaviour
     public enum State
     {
         WakeRoll, Breakfast, MorningFree, Lunch, Job,
-        Exercise, Shower, Dinner, NightFree, NightRoll, LightsOut
+        Exercise, Shower, Dinner, NightFree, NightRoll, LockCell, LightsOut
     };
     public State currentState;
 
     void Start()
     {
         // Initialize the clock time
-        currentTime = new DateTime(2023, 3, 11, 6, 30, 0);
+        currentTime = new DateTime(2023, 3, 11, 21, 30, 0);
 
-        currentState = State.LightsOut;
+        currentState = State.NightRoll;
     }
 
     void Update()
@@ -121,7 +121,7 @@ public class TimeManager : MonoBehaviour
                 break;
             case State.NightFree:
                 scheduleText.text = "Free Time";
-                if (currentTime.Hour == 22)
+                if (currentTime.Hour == 21)
                 {
                     currentState = State.NightRoll;
                     AudioSource.PlayClipAtPoint(bellSFX, Camera.main.transform.position);
@@ -129,6 +129,14 @@ public class TimeManager : MonoBehaviour
                 break;
             case State.NightRoll:
                 scheduleText.text = "Roll Call";
+                if (currentTime.Hour == 22)
+                {
+                    currentState = State.LockCell;
+                    AudioSource.PlayClipAtPoint(bellSFX, Camera.main.transform.position);
+                }
+                break;
+            case State.LockCell:
+                scheduleText.text = "Get Back To Your Cell!";
                 if (currentTime.Hour == 23)
                 {
                     currentState = State.LightsOut;

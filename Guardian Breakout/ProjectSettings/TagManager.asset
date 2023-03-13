@@ -9,6 +9,11 @@ TagManager:
   - CellDoorB
   - Friendly
   - Unfriendly
+  - CellDoor
+  - Bed
+  - Read
+  - Exercise
+  - Shower
   layers:
   - Default
   - TransparentFX
