@@ -15,6 +15,7 @@ public class CameraController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Screen.SetResolution(1920, 1080, true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         
