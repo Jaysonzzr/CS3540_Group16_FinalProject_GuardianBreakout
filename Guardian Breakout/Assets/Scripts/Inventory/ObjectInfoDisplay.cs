@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class ObjectInfoDisplay : MonoBehaviour
 {
@@ -14,7 +15,15 @@ public class ObjectInfoDisplay : MonoBehaviour
 
     float currentProcess;
     bool opening = false;
-    bool locking = false;
+    bool exercising = false;
+    public Text exerciseText;
+
+    bool reading = false;
+    public Text readText;
+    public Text readKeyText;
+    int randomIndex;
+
+    bool locked = false;
     float coolDown = 0.1f;
 
     GameObject player;
@@ -54,11 +63,13 @@ public class ObjectInfoDisplay : MonoBehaviour
                                 cameraController.enabled = true;
                                 Cursor.lockState = CursorLockMode.Locked;
                                 Cursor.visible = false;
+
+                                GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
                             }
                         }
                         else
                         {
-                            if (Input.GetKeyDown(KeyCode.E))
+                            if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
                             {
                                 obj.SetActive(true);
                                 infoText.enabled = false;
@@ -67,6 +78,8 @@ public class ObjectInfoDisplay : MonoBehaviour
                                 cameraController.enabled = false;
                                 Cursor.lockState = CursorLockMode.None;
                                 Cursor.visible = true;
+
+                                GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                             }
                         }
                     }
@@ -89,11 +102,13 @@ public class ObjectInfoDisplay : MonoBehaviour
 
                                 currentProcess = 0.0f;
                                 opening = false;
+
+                                GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
                             }
                         }
                         else
                         {
-                            if (!opening && Input.GetKeyDown(KeyCode.E))
+                            if (!opening && Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
                             {
                                 infoText.enabled = false;
                                 playerController.enabled = false;
@@ -101,6 +116,8 @@ public class ObjectInfoDisplay : MonoBehaviour
 
                                 opening = true;
                                 processBar.gameObject.SetActive(true);
+
+                                GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                             }
 
                             if (coolDown <= 0)
@@ -143,7 +160,7 @@ public class ObjectInfoDisplay : MonoBehaviour
                         infoText.color = new Color(255/255f, 255/255f, 255/255f);
                         infoText.enabled = true;
 
-                        if (Input.GetKeyDown(KeyCode.E))
+                        if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
                         {
                             player.GetComponent<CharacterController>().enabled = false;
                             playerController.enabled = false;
@@ -159,8 +176,10 @@ public class ObjectInfoDisplay : MonoBehaviour
                                  hitObject.transform.root.eulerAngles.z
                                 )
                             );
-                            locking = true;
+                            locked = true;
                             coolDown = 0.1f;
+
+                            GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                         }
                     }
 
@@ -175,7 +194,7 @@ public class ObjectInfoDisplay : MonoBehaviour
                         infoText.color = new Color(255/255f, 255/255f, 255/255f);
                         infoText.enabled = true;
 
-                        if (Input.GetKeyDown(KeyCode.E))
+                        if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
                         {
                             player.GetComponent<CharacterController>().enabled = false;
                             playerController.enabled = false;
@@ -191,8 +210,11 @@ public class ObjectInfoDisplay : MonoBehaviour
                                  hitObject.transform.root.eulerAngles.z
                                 )
                             );
-                            locking = true;
+                            locked = true;
+                            exercising = true;
                             coolDown = 0.1f;
+
+                            GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                         }
                     }
 
@@ -200,6 +222,31 @@ public class ObjectInfoDisplay : MonoBehaviour
                     {
                         infoText.color = new Color(255/255f, 255/255f, 255/255f);
                         infoText.enabled = true;
+
+                        if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
+                        {
+                            player.GetComponent<CharacterController>().enabled = false;
+                            playerController.enabled = false;
+                            cameraController.enabled = false;
+                            
+                            Camera.main.transform.SetParent(hitObject.transform);
+                            Camera.main.transform.position = new Vector3(
+                                hitObject.transform.position.x - 2.5f, hitObject.transform.position.y + 2, hitObject.transform.position.z - 0.16f
+                            );
+                            Camera.main.transform.rotation = Quaternion.Euler(
+                                new Vector3(hitObject.transform.rotation.eulerAngles.x + 15,
+                                 hitObject.transform.rotation.eulerAngles.y - 90, 
+                                 hitObject.transform.root.eulerAngles.z
+                                )
+                            );
+                            locked = true;
+                            reading = true;
+                            coolDown = 0.1f;
+
+                            randomIndex = UnityEngine.Random.Range(0, 4);
+
+                            GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                        }
                     }
                 }
                 else
@@ -220,7 +267,7 @@ public class ObjectInfoDisplay : MonoBehaviour
             infoText.text = "";
         }
 
-        if (locking)
+        if (locked)
         {
             if (Input.GetKeyDown(KeyCode.E) && coolDown <= 0)
             {
@@ -229,11 +276,102 @@ public class ObjectInfoDisplay : MonoBehaviour
                 cameraController.enabled = true;
 
                 Camera.main.transform.SetParent(player.transform);
-                locking = false;
+                locked = false;
+
+                GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
+                currentProcess = 0.0f;
+
+                if (exercising)
+                {
+                    exercising = false;
+                    myCanvas.transform.Find("PlayerStats").gameObject.SetActive(false);
+                    exerciseText.gameObject.SetActive(false);
+                    processBar.gameObject.SetActive(false);
+                }
+
+                if (reading)
+                {
+                    reading = false;
+                    myCanvas.transform.Find("PlayerStats").gameObject.SetActive(false);
+                    readText.gameObject.SetActive(false);
+                    readKeyText.gameObject.SetActive(false);
+                    processBar.gameObject.SetActive(false);
+                }
             }
             else if (coolDown > 0)
             {
                 coolDown -= Time.deltaTime;
+            }
+
+            if (exercising)
+            {
+                infoText.enabled = false;
+                exerciseText.gameObject.SetActive(true);
+                processBar.gameObject.SetActive(true);
+                processBar.value = currentProcess;
+
+                GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                myCanvas.transform.Find("PlayerStats").gameObject.SetActive(true);
+
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    currentProcess += 100 * Time.deltaTime;
+                }
+                
+                if (currentProcess > 0)
+                {
+                    currentProcess -= 5 * Time.deltaTime;
+                }
+
+                if (currentProcess >= 100)
+                {
+                    currentProcess = 0.0f;
+                    GameObject.FindObjectOfType<PlayerStats>().currentStrength += 2;
+                }
+            }
+
+            if (reading)
+            {
+                infoText.enabled = false;
+                readText.gameObject.SetActive(true);
+                readKeyText.gameObject.SetActive(true);
+                processBar.gameObject.SetActive(true);
+                processBar.value = currentProcess;
+
+                GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                myCanvas.transform.Find("PlayerStats").gameObject.SetActive(true);
+
+                string[] keys = {"Q", "B", "Y", "P"};
+                
+                string randomKey = keys[randomIndex];
+
+                readKeyText.text = randomKey;
+
+                if (Input.anyKeyDown)
+                {
+                    foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode)))
+                    {
+                        if (Input.GetKeyDown(keyCode))
+                        {
+                            if (keyCode.ToString() == randomKey)
+                            {
+                                currentProcess += 300 * Time.deltaTime;
+                                randomIndex = UnityEngine.Random.Range(0, 4);
+                            }
+                        }
+                    }
+                }
+                
+                if (currentProcess > 0)
+                {
+                    currentProcess -= 5 * Time.deltaTime;
+                }
+
+                if (currentProcess >= 100)
+                {
+                    currentProcess = 0.0f;
+                    GameObject.FindObjectOfType<PlayerStats>().currentIntellect += 2;
+                }
             }
         }
     }

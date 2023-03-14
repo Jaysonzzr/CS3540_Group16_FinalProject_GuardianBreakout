@@ -5,7 +5,7 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public InventorySlot[] inventorySlots;
-    int selectedSlot = -1;
+    public int selectedSlot = -1;
 
     private void Start() 
     {

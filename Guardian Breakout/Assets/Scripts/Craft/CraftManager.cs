@@ -35,6 +35,8 @@ public class CraftManager : MonoBehaviour
                 cameraController.enabled = true;
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
+
+                GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
             }
 
             foreach (InventorySlot slot in inventorySlots)
@@ -49,7 +51,7 @@ public class CraftManager : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.C) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
             {
                 obj.SetActive(true);
                 AudioSource.PlayClipAtPoint(openUISFX, Camera.main.transform.position);
@@ -57,6 +59,8 @@ public class CraftManager : MonoBehaviour
                 cameraController.enabled = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+
+                GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
             }
         }
     }

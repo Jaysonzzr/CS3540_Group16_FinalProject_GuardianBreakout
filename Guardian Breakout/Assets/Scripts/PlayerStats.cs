@@ -24,6 +24,8 @@ public class PlayerStats : MonoBehaviour
     public AudioClip openUISFX;
     public AudioClip closeUISFX;
 
+    public bool lockUI = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,18 +47,22 @@ public class PlayerStats : MonoBehaviour
         GameObject obj = myCanvas.transform.Find("PlayerStats").gameObject;
         if (obj.activeSelf)
         {
-            if (Input.GetKeyDown(KeyCode.V))
+            if (Input.GetKeyDown(KeyCode.V) && !lockUI)
             {
                 obj.SetActive(false);
                 AudioSource.PlayClipAtPoint(closeUISFX, Camera.main.transform.position);
+
+                lockUI = false;
             }
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.V))
+            if (Input.GetKeyDown(KeyCode.V) && !lockUI)
             {
                 obj.SetActive(true);
                 AudioSource.PlayClipAtPoint(openUISFX, Camera.main.transform.position);
+
+                lockUI = true;
             }
         }
 
