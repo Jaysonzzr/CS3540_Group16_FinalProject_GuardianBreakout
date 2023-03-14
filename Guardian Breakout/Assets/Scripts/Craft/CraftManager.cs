@@ -37,6 +37,16 @@ public class CraftManager : MonoBehaviour
                 Cursor.visible = false;
 
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
+
+                GameObject tables = myCanvas.transform.Find("CraftTable/Items/Crafts").gameObject;
+                
+                for (int i = 0; i < tables.transform.childCount; i++)
+                {
+                    if (tables.transform.GetChild(i).gameObject.activeSelf)
+                    {
+                        tables.transform.GetChild(i).gameObject.SetActive(false);
+                    }
+                }
             }
 
             foreach (InventorySlot slot in inventorySlots)
