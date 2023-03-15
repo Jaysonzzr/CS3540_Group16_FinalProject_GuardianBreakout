@@ -7,6 +7,8 @@ public class InventoryManager : MonoBehaviour
     public InventorySlot[] inventorySlots;
     public int selectedSlot = -1;
 
+    public bool lockLootBar = false;
+
     private void Start() 
     {
         ChangeSelectedSlot(0);
@@ -14,7 +16,7 @@ public class InventoryManager : MonoBehaviour
 
     private void Update() 
     {
-        if (Input.inputString != null)
+        if (Input.inputString != null && !lockLootBar)
         {
             bool isNumber = int.TryParse(Input.inputString, out int number);
             if (isNumber && number > 0 && number < 7)

@@ -27,9 +27,9 @@ public class TimeManager : MonoBehaviour
     void Start()
     {
         // Initialize the clock time
-        currentTime = new DateTime(2023, 3, 11, 21, 30, 0);
+        currentTime = new DateTime(2023, 3, 11, 11, 40, 0);
 
-        currentState = State.NightRoll;
+        currentState = State.MorningFree;
     }
 
     void Update()

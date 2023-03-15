@@ -10,11 +10,14 @@ TagManager:
   - Friendly
   - Unfriendly
   - CellDoor
-  - Bed
   - Read
   - Exercise
-  - Shower
   - NPC
+  - BedF
+  - BedB
+  - Eating
+  - ShowerF
+  - ShowerB
   layers:
   - Default
   - TransparentFX

@@ -29,6 +29,8 @@ public class PlayerStats : MonoBehaviour
     public bool lockUI = false;
     public bool lockStats = false;
 
+    public bool isDead = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -68,6 +70,11 @@ public class PlayerStats : MonoBehaviour
 
                 lockUI = true;
             }
+        }
+
+        if (currentHealth <= 0)
+        {
+            isDead = true;
         }
 
         playerHealth.text = currentHealth.ToString();
