@@ -134,6 +134,8 @@ public class ObjectsInteractive : MonoBehaviour
                                     processBar.gameObject.SetActive(false);
                                     currentProcess = 0.0f;
                                     coolDown = 0.1f;
+
+                                    GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
                                 }
                             }
                             else if (opening && coolDown > 0)

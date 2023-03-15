@@ -80,6 +80,18 @@ public class FinishMission : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (missionFinished)
         {
             transform.parent.Find("Requires").GetChild(0).GetChild(0).GetComponent<DraggableItem>().enabled = false;
+
+            for (int i = 1; i < 3; i++)
+            {
+                if (transform.parent.Find("Rewards").GetChild(i).childCount > 0)
+                {
+                    transform.parent.Find("Rewards").GetChild(i).GetChild(0).GetComponent<DraggableItem>().enabled = true;
+                }
+                else
+                {
+                    transform.parent.Find("Rewards").GetChild(i).GetComponent<InventorySlot>().enabled = false;
+                }
+            }
         }
 
         if (getReward && getTime == 1)
