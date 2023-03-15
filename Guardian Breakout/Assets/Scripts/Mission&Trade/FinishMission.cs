@@ -16,6 +16,7 @@ public class FinishMission : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     Text finishText;
 
     bool entering;
+    public bool couldFinish = false;
     public bool missionFinished = false;
     public bool getReward = false;
     int getTime = 1;
@@ -31,7 +32,7 @@ public class FinishMission : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
     {
-        if (missionFinished)
+        if (couldFinish && !missionFinished)
         {
             finishImage.color = overColor;
             entering = true;
@@ -40,7 +41,7 @@ public class FinishMission : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
     {
-        if (missionFinished)
+        if (couldFinish && !missionFinished)
         {
             finishImage.color = originColor;
             entering = false;
@@ -58,16 +59,27 @@ public class FinishMission : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             {
                 finishImage.color = finishedColor;
                 finishText.text = "Finished";
-                missionFinished = false;
+                couldFinish = false;
+                missionFinished = true;
                 getReward = true;
 
                 myCanvas.transform.Find("Missions/Missions/" + name).gameObject.SetActive(false);
             }
         }
 
-        if (missionFinished && !entering)
+        if (!couldFinish)
+        {
+            finishImage.color = finishedColor;
+        }
+
+        if (couldFinish && !entering)
         {
             finishImage.color = originColor;
+        }
+
+        if (missionFinished)
+        {
+            transform.parent.Find("Requires").GetChild(0).GetChild(0).GetComponent<DraggableItem>().enabled = false;
         }
 
         if (getReward && getTime == 1)
