@@ -9,8 +9,8 @@ public class ObjectsInteractive : MonoBehaviour
     public Slider processBar;
     public AudioClip openInventorySFX;
     public AudioClip closeInventorySFX;
-    public PlayerController playerController;
-    public CameraController cameraController;
+    private PlayerController playerController;
+    private CameraController cameraController;
     public float maxDistance = 5.0f; // Maximum distance at which object info will be displayed
 
     public InventorySlot[] toolBar;
@@ -46,6 +46,9 @@ public class ObjectsInteractive : MonoBehaviour
     {
         player = GameObject.FindWithTag("Player");
         selectedSlotIdx = GameObject.FindObjectOfType<InventoryManager>().selectedSlot;
+
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        cameraController = Camera.main.GetComponent<CameraController>();
     }
 
     void Update()
