@@ -18,6 +18,7 @@ TagManager:
   - Eating
   - ShowerF
   - ShowerB
+  - wanderpoint
   layers:
   - Default
   - TransparentFX

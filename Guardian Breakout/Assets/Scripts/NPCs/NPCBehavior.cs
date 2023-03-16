@@ -30,11 +30,13 @@ public class NPCBehavior : MonoBehaviour
     public bool dying = false;
     int deadTime;
 
+    Animator anim;
+
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player");
-
+        anim = GetComponent<Animator>();
         currentState = NPCStates.Patrol;
         FindNextPoint();
     }
@@ -67,6 +69,8 @@ public class NPCBehavior : MonoBehaviour
 
     void UpdatePatrolState()
     {
+        anim.SetInteger("animState", 1);
+
         if (Vector3.Distance(transform.position, nextDestination) < 1)
         {
             FindNextPoint();
@@ -80,21 +84,23 @@ public class NPCBehavior : MonoBehaviour
 
     void UpdateTradeState()
     {
-
+        anim.SetInteger("animState", 3);
     }
 
     void UpdateChaseState()
     {
-
+        anim.SetInteger("animState", 2);
     }
 
     void UpdateAttackState()
     {
-        
+        anim.SetInteger("animState", 4);
     }
 
     void UpdateDeadState()
     {
+        anim.SetInteger("animState", 5);
+
         if (GameObject.Find("LevelManager").GetComponent<TimeManager>().currentTime.Hour == deadTime + 1)
         {
             Vector3 viewportPos = Camera.main.WorldToViewportPoint(gameObject.transform.position);
