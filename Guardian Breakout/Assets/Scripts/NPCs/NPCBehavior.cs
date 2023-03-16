@@ -18,7 +18,6 @@ public class NPCBehavior : MonoBehaviour
 
     public NPCStates currentState;
 
-    public float enemySpeed = 5;
     public GameObject player;
 
     public GameObject[] wanderPoints;
@@ -77,9 +76,6 @@ public class NPCBehavior : MonoBehaviour
         }
 
         FaceTarget(nextDestination);
-
-        transform.position = Vector3.MoveTowards
-            (transform.position, nextDestination, Time.deltaTime * enemySpeed);
     }
 
     void UpdateTradeState()
