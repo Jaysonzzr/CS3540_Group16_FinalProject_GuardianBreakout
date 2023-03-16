@@ -71,7 +71,7 @@ public class NPCBehavior : MonoBehaviour
     {
         anim.SetInteger("animState", 1);
 
-        if (Vector3.Distance(transform.position, nextDestination) < 1)
+        if (Vector3.Distance(transform.position, nextDestination) < 3)
         {
             FindNextPoint();
         }
