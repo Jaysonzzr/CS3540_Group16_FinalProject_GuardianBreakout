@@ -24,7 +24,7 @@ public class OnMouseOverTradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
     void Start()
     {
         image = GetComponent<Image>();
-        infoImage = transform.parent.parent.transform.Find("Costs/" + transform.name).gameObject;
+        infoImage = transform.parent.parent.transform.Find("MainMission/Costs/" + transform.name).gameObject;
         cost = int.Parse(infoImage.transform.GetChild(1).name);
     }
 
@@ -63,7 +63,12 @@ public class OnMouseOverTradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
     {
         if (entering)
         {
-            if (Input.GetMouseButtonDown(0) && affordable)
+            string npcName = transform.parent.parent.parent.name;
+            if (GameObject.Find("NPCs/" + npcName).gameObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Dead)
+            {
+                unlock = true;
+            }
+            else if (Input.GetMouseButtonDown(0) && affordable)
             {
                 unlock = true;
             }

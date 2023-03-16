@@ -55,7 +55,7 @@ public class AcceptMissions : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 acceptText.text = "Acceptted";
                 missionAccetped = true;
 
-                string name = transform.parent.parent.name;
+                string name = transform.parent.parent.parent.name;
                 myCanvas.transform.Find("Missions/Missions/" + name).gameObject.SetActive(true);
             }
         }

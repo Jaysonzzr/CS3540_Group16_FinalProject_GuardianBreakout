@@ -51,7 +51,7 @@ public class FinishMission : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     // Update is called once per frame
     void Update()
     {
-        string name = transform.parent.parent.name;
+        string name = transform.parent.parent.parent.name;
         
         if (entering)
         {
@@ -96,7 +96,9 @@ public class FinishMission : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         if (getReward && getTime == 1)
         {
-            GameObject rewardMoney = myCanvas.transform.Find("NPCs/" + name + "/MyInventory/Rewards").gameObject.transform.GetChild(0).gameObject;
+            GameObject rewardMoney = myCanvas.transform.Find(
+                "NPCsInventories/" + name + "/MyInventory/MainMission/Rewards"
+            ).gameObject.transform.GetChild(0).gameObject;
             GameObject.FindObjectOfType<PlayerStats>().currentMoney += int.Parse(rewardMoney.name);
             getTime--;
         }

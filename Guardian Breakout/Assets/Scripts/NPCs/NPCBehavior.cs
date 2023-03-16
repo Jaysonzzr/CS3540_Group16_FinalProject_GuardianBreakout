@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System;
 
 public class NPCBehavior : MonoBehaviour
 {
@@ -24,6 +26,9 @@ public class NPCBehavior : MonoBehaviour
 
     float distanceToPlayer;
     int currentDestinationIdx = 0;
+
+    public bool dying = false;
+    int deadTime;
 
     // Start is called before the first frame update
     void Start()
@@ -85,12 +90,28 @@ public class NPCBehavior : MonoBehaviour
 
     void UpdateAttackState()
     {
-
+        
     }
 
     void UpdateDeadState()
     {
-        
+        if (GameObject.Find("LevelManager").GetComponent<TimeManager>().currentTime.Hour == deadTime + 1)
+        {
+            Vector3 viewportPos = Camera.main.WorldToViewportPoint(gameObject.transform.position);
+
+            // Check if the game object is outside the camera view.
+            if (viewportPos.x < 0 || viewportPos.x > 1 || viewportPos.y < 0 || viewportPos.y > 1) 
+            {
+                transform.position = new Vector3(0, 0, 0);
+                currentState = NPCStates.Patrol;
+            }
+        }
+
+        if (dying)
+        {
+            deadTime = GameObject.Find("LevelManager").GetComponent<TimeManager>().currentTime.Hour;
+            dying = false;
+        }
     }
 
     void FindNextPoint()

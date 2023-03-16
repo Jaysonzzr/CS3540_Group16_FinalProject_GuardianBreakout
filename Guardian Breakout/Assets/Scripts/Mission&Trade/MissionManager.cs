@@ -46,9 +46,9 @@ public class MissionManager : MonoBehaviour
         {
             if (missions.GetChild(i).gameObject.activeSelf)
             {
-                GameObject npc = myCanvas.transform.Find("NPCs/" + missions.GetChild(i).name).gameObject;
+                GameObject npc = myCanvas.transform.Find("NPCsInventories/" + missions.GetChild(i).name).gameObject;
                 
-                if (npc.transform.Find("MyInventory/Finish").gameObject.GetComponent<FinishMission>().missionFinished)
+                if (npc.transform.Find("MyInventory/MainMission/Finish").gameObject.GetComponent<FinishMission>().couldFinish)
                 {
                     missions.GetChild(i).transform.Find("Finish").gameObject.SetActive(true);
                 }

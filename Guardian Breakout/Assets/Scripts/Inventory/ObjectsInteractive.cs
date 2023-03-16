@@ -318,41 +318,72 @@ public class ObjectsInteractive : MonoBehaviour
 
                     if (hitObject.CompareTag("NPC"))
                     {
-                        infoText.text = hitObject.name + " (E)";
-                        infoText.color = new Color(255/255f, 255/255f, 255/255f);
-                        GameObject obj = myCanvas.transform.Find("NPCs/" + hitObject.name.ToString()).gameObject;
-                        if (obj.activeSelf)
+                        if (hitObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Dead ||
+                            hitObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Trade ||
+                            hitObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Patrol)
                         {
-                            if (Input.GetKeyDown(KeyCode.E))
+                            infoText.text = hitObject.name + " (E)";
+                            infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                            GameObject obj = myCanvas.transform.Find("NPCsInventories/" + hitObject.name.ToString()).gameObject;
+                            if (obj.activeSelf)
                             {
-                                obj.SetActive(false);
-                                infoText.enabled = true;
-                                playerController.enabled = true;
-                                cameraController.enabled = true;
-                                Cursor.lockState = CursorLockMode.Locked;
-                                Cursor.visible = false;
+                                if (Input.GetKeyDown(KeyCode.E))
+                                {
+                                    obj.SetActive(false);
+                                    infoText.enabled = true;
+                                    playerController.enabled = true;
+                                    cameraController.enabled = true;
+                                    Cursor.lockState = CursorLockMode.Locked;
+                                    Cursor.visible = false;
 
-                                GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
+                                    GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
 
-                                hitObject.GetComponent<NPCBehavior>().currentState = originState;
+                                    hitObject.GetComponent<NPCBehavior>().currentState = originState;
+                                }
+                            }
+                            else
+                            {
+                                if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
+                                {
+                                    obj.SetActive(true);
+                                    infoText.enabled = false;
+                                    playerController.enabled = false;
+                                    cameraController.enabled = false;
+                                    Cursor.lockState = CursorLockMode.None;
+                                    Cursor.visible = true;
+
+                                    GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+
+                                    originState = hitObject.GetComponent<NPCBehavior>().currentState;
+                                    
+                                    if (hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Dead)
+                                    {
+                                        hitObject.GetComponent<NPCBehavior>().currentState = NPCBehavior.NPCStates.Trade;
+                                        GameObject.Find(
+                                            "NPCsInventories/" + hitObject.name + "/MyInventory/MainInventoryName"
+                                        ).gameObject.GetComponent<Text>().text = "Trading Contents";
+
+                                        GameObject.Find(
+                                            "NPCsInventories/" + hitObject.name + "/MyInventory/MainMission"
+                                        ).gameObject.SetActive(true);
+                                    }
+                                    else
+                                    {
+                                        GameObject.Find(
+                                            "NPCsInventories/" + hitObject.name + "/MyInventory/MainInventoryName"
+                                        ).gameObject.GetComponent<Text>().text = "Contents";
+
+                                        GameObject.Find(
+                                            "NPCsInventories/" + hitObject.name + "/MyInventory/MainMission"
+                                        ).gameObject.SetActive(false);
+                                    }
+                                }
                             }
                         }
                         else
                         {
-                            if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
-                            {
-                                obj.SetActive(true);
-                                infoText.enabled = false;
-                                playerController.enabled = false;
-                                cameraController.enabled = false;
-                                Cursor.lockState = CursorLockMode.None;
-                                Cursor.visible = true;
-
-                                GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
-
-                                originState = hitObject.GetComponent<NPCBehavior>().currentState;
-                                hitObject.GetComponent<NPCBehavior>().currentState = NPCBehavior.NPCStates.Trade;
-                            }
+                            infoText.text = hitObject.name;
+                            infoText.color = new Color(222/255f, 77/255f, 77/255f);
                         }
                     }
 

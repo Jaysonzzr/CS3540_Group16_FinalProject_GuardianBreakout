@@ -15,7 +15,7 @@ public class TimeManager : MonoBehaviour
     public Text clockText;
     public Text scheduleText;
     public AudioClip bellSFX;
-    private DateTime currentTime;
+    public DateTime currentTime;
 
     public enum State
     {
