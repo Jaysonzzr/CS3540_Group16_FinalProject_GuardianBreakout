@@ -39,6 +39,9 @@ public class ObjectsInteractive : MonoBehaviour
 
     GameObject player;
 
+    public GameObject water;
+    GameObject shower;
+
     private void Start() 
     {
         player = GameObject.FindWithTag("Player");
@@ -230,12 +233,18 @@ public class ObjectsInteractive : MonoBehaviour
                                 Camera.main.transform.position = new Vector3(
                                     hitObject.transform.position.x, hitObject.transform.position.y + 0.6f, hitObject.transform.position.z + 1
                                 );
+                                shower = Instantiate(water, new Vector3(
+                                    hitObject.transform.position.x, hitObject.transform.position.y + 2.2f, hitObject.transform.position.z + 0.4f
+                                ), Quaternion.Euler(new Vector3(50, 0, -90)));
                             }
                             else
                             {
                                 Camera.main.transform.position = new Vector3(
                                     hitObject.transform.position.x, hitObject.transform.position.y + 0.6f, hitObject.transform.position.z - 1
                                 );
+                                shower = Instantiate(water, new Vector3(
+                                    hitObject.transform.position.x, hitObject.transform.position.y + 2.2f, hitObject.transform.position.z - 0.4f
+                                ), Quaternion.Euler(new Vector3(50, 180, -90)));
                             }
                             Camera.main.transform.rotation = Quaternion.Euler(
                                 new Vector3(hitObject.transform.rotation.eulerAngles.x,
@@ -497,6 +506,7 @@ public class ObjectsInteractive : MonoBehaviour
                 if (showering)
                 {
                     showering = false;
+                    Destroy(shower, 5 * Time.deltaTime);
                 }
             }
             else if (coolDown > 0)
