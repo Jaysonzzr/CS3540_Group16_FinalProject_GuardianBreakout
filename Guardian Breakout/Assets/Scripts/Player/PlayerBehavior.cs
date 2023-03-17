@@ -29,6 +29,26 @@ public class PlayerBehavior : MonoBehaviour
             Camera.main.transform.Find("Plate").gameObject.SetActive(false);
         }
 
+        if (toolBar[selectedSlotIdx].transform.childCount > 0 &&
+            toolBar[selectedSlotIdx].transform.GetChild(0).name == "Pickaxe")
+        {
+            Camera.main.transform.Find("Pickaxe").gameObject.SetActive(true);
+        }
+        else
+        {
+            Camera.main.transform.Find("Pickaxe").gameObject.SetActive(false);
+        }
+
+        if (toolBar[selectedSlotIdx].transform.childCount > 0 &&
+            toolBar[selectedSlotIdx].transform.GetChild(0).name == "Crowbar")
+        {
+            Camera.main.transform.Find("Crowbar").gameObject.SetActive(true);
+        }
+        else
+        {
+            Camera.main.transform.Find("Crowbar").gameObject.SetActive(false);
+        }
+
         if (GameObject.Find("LevelManager").GetComponent<PlayerStats>().isDead)
         {
             transform.position = new Vector3(5.4873f, 0.59f, -26.9027f);
