@@ -9,10 +9,18 @@ public class PlayerBehavior : MonoBehaviour
     float increaseTime = 1;
     float currentTime;
 
+    bool getHurt = false;
+    Vector3 hurtDirection;
+    public float bounceBackSpeed = 15f;
+    public float bounceBackDuration = 0.5f;
+
+    private float bounceBackEndTime = 0f;
+    CharacterController controller;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -82,6 +90,34 @@ public class PlayerBehavior : MonoBehaviour
                 transform.GetComponent<PlayerController>().enabled = true;
                 Camera.main.GetComponent<CameraController>().enabled = true;
             }
+        }
+
+        if (getHurt)
+        {
+            TakeDamage();
+            getHurt = false;
+        }
+
+        if (Time.time < bounceBackEndTime && GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth >= 0)
+        {
+            // Apply move direction with a certain speed
+            controller.SimpleMove(hurtDirection.normalized * bounceBackSpeed);
+        }
+    }
+
+    public void TakeDamage()
+    {
+        // Set the end time of the bounce-back effect
+        bounceBackEndTime = Time.time + bounceBackDuration;
+    }
+
+    private void OnTriggerEnter(Collider other) 
+    {
+        if (other.CompareTag("NPCDamageBox"))
+        {
+            getHurt = true;
+            hurtDirection = other.gameObject.transform.forward;
+            GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth -= other.transform.parent.GetComponent<NPCBehavior>().npcDamage;
         }
     }
 }

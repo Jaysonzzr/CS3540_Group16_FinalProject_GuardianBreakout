@@ -464,6 +464,7 @@ public class ObjectsInteractive : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E) && coolDown <= 0)
             {
                 GameObject.Find("LevelManager").GetComponent<InventoryManager>().lockLootBar = false;
+                GameObject.FindObjectOfType<PlayerStats>().lockStats = false;
 
                 player.GetComponent<CharacterController>().enabled = true;
                 playerController.enabled = true;

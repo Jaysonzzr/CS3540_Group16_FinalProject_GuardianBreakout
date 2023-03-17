@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class CraftManager : MonoBehaviour
 {
-    public PlayerController playerController;
-    public CameraController cameraController;
+    private PlayerController playerController;
+    private CameraController cameraController;
 
 
     public Canvas myCanvas;
@@ -18,7 +18,8 @@ public class CraftManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        cameraController = Camera.main.GetComponent<CameraController>();
     }
 
     // Update is called once per frame

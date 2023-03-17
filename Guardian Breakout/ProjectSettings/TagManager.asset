@@ -20,6 +20,7 @@ TagManager:
   - ShowerB
   - wanderpoint
   - PlayerDamageBox
+  - NPCDamageBox
   layers:
   - Default
   - TransparentFX
