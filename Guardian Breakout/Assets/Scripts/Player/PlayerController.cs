@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
                 attacking = true;
                 currentAttackTime = 0.0f;
                 currentDuration = 0.0f;
+                damageBox.enabled = true;
             }
         }
 
@@ -88,7 +89,6 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                damageBox.enabled = true;
                 currentDuration += Time.deltaTime;
             } 
         }

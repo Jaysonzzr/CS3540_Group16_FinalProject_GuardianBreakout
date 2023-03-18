@@ -38,6 +38,9 @@ public class NPCBehavior : MonoBehaviour
     public float attackDistance = 3;
     public float chaseDistance = 10;
     BoxCollider damageBox;
+    public float attackRate = 2;
+    float attackTime = 0;
+    float currentDuration = 0;
 
     public float bounceBackSpeed = 15f;
     public float bounceBackDuration = 0.5f;
@@ -93,12 +96,7 @@ public class NPCBehavior : MonoBehaviour
             hurtTime = 0.0f;
             getHurt = false;
         }
-
-        if (currentState == NPCStates.Attack)
-        {
-            damageBox.enabled = true;
-        }
-        else
+        if (currentState != NPCStates.Attack)
         {
             damageBox.enabled = false;
         }
@@ -162,7 +160,6 @@ public class NPCBehavior : MonoBehaviour
 
     void UpdateAttackState()
     {
-        anim.SetInteger("animState", 4);
 
         if (distanceToPlayer <= attackDistance)
         {
@@ -178,6 +175,29 @@ public class NPCBehavior : MonoBehaviour
         }
 
         FaceTarget(player.transform.position);
+        anim.SetInteger("animState", 4);
+        var animDuration = anim.GetCurrentAnimatorStateInfo(0).length;
+        if (attackTime >= 0.7f * animDuration)
+        {
+            damageBox.enabled = true;
+            //Debug.Log("true");
+            currentDuration = 0.0f;
+            if (currentDuration > animDuration)
+            {
+                currentDuration = 0.0f;
+                damageBox.enabled = false;
+            }
+            else
+            {
+                currentDuration += Time.deltaTime;
+            }
+            attackTime = 0.0f;
+        }
+
+        else
+        {
+            attackTime += Time.deltaTime;
+        }
     }
 
     void UpdateDeadState()
@@ -232,6 +252,7 @@ public class NPCBehavior : MonoBehaviour
         if (other.CompareTag("PlayerDamageBox"))
         {
             getHurt = true;
+            other.enabled = false;
         }
     }
 }
