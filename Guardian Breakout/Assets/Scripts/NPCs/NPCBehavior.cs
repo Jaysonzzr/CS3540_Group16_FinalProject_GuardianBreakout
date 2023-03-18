@@ -57,7 +57,7 @@ public class NPCBehavior : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();
-        currentState = NPCStates.Patrol;
+        currentState = NPCStates.Sit;
         FindNextPoint();
     }
 
@@ -74,6 +74,9 @@ public class NPCBehavior : MonoBehaviour
                 break;
             case NPCStates.Trade:
                 UpdateTradeState();
+                break;
+            case NPCStates.Sit:
+                UpdateSitState();
                 break;
             case NPCStates.Hurt:
                 UpdateHurtState();
@@ -99,6 +102,15 @@ public class NPCBehavior : MonoBehaviour
         if (currentState != NPCStates.Attack)
         {
             damageBox.enabled = false;
+        }
+
+        if (currentState != NPCStates.Sit)
+        {
+            controller.enabled = true;
+        }
+        else
+        {
+            controller.enabled = false;
         }
     }
 
@@ -140,6 +152,11 @@ public class NPCBehavior : MonoBehaviour
         }
 
         FaceTarget(player.transform.position);
+    }
+
+    void UpdateSitState()
+    {
+        anim.SetInteger("animState", 6);
     }
 
     void UpdateChaseState()

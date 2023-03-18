@@ -21,6 +21,7 @@ TagManager:
   - wanderpoint
   - PlayerDamageBox
   - NPCDamageBox
+  - Guard
   layers:
   - Default
   - TransparentFX

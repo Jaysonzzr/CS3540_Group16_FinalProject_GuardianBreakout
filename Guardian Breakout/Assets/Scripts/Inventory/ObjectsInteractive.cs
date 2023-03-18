@@ -332,7 +332,8 @@ public class ObjectsInteractive : MonoBehaviour
                     {
                         if (hitObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Dead ||
                             hitObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Trade ||
-                            hitObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Patrol)
+                            hitObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Patrol ||
+                            hitObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Sit)
                         {
                             infoText.text = hitObject.name + " (E)";
                             infoText.color = new Color(255/255f, 255/255f, 255/255f);

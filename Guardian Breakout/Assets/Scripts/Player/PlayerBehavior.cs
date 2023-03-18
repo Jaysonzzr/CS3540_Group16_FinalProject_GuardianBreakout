@@ -38,7 +38,8 @@ public class PlayerBehavior : MonoBehaviour
         }
 
         if (toolBar[selectedSlotIdx].transform.childCount > 0 &&
-            toolBar[selectedSlotIdx].transform.GetChild(0).name == "Pickaxe")
+            (toolBar[selectedSlotIdx].transform.GetChild(0).name == "Pickaxe" ||
+            toolBar[selectedSlotIdx].transform.GetChild(0).name == "Pickaxe(Clone)"))
         {
             Camera.main.transform.Find("Pickaxe").gameObject.SetActive(true);
         }
@@ -48,7 +49,8 @@ public class PlayerBehavior : MonoBehaviour
         }
 
         if (toolBar[selectedSlotIdx].transform.childCount > 0 &&
-            toolBar[selectedSlotIdx].transform.GetChild(0).name == "Crowbar")
+            (toolBar[selectedSlotIdx].transform.GetChild(0).name == "Crowbar" ||
+            toolBar[selectedSlotIdx].transform.GetChild(0).name == "Crowbar(Clone)"))
         {
             Camera.main.transform.Find("Crowbar").gameObject.SetActive(true);
         }
