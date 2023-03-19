@@ -220,7 +220,6 @@ public class Level1Manager : MonoBehaviour
         {
             jess.GetComponent<CharacterController>().enabled = false;
             jess.transform.position = new Vector3(-12f, -0.05000004f, 29f);
-            Debug.Log(jess.transform.position.x);
             jess.GetComponent<NPCBehavior>().currentState = NPCBehavior.NPCStates.Chase;
 
             tutorialHints.transform.Find("Hints/TitleText").GetComponent<Text>().text = "Combat";
