@@ -30,6 +30,8 @@ public class Level1Manager : MonoBehaviour
     bool couldCraft = false;
     bool crafting = false;
     bool ableCraft = false;
+    bool looting = false;
+    bool wallBreaking = false;
 
     int keyCount = 1;
     int missionCount = 1;
@@ -39,6 +41,8 @@ public class Level1Manager : MonoBehaviour
     int craftCount = 1;
     int craftTableCount = 1;
     int ableCraftCount = 1;
+    int lootCount = 1;
+    int axeCount = 1;
 
     Color startColor;
     float startWaitingTime = 1.0f;
@@ -53,6 +57,8 @@ public class Level1Manager : MonoBehaviour
     public string craftText;
     public string craftTableText;
     public string ableCraftText;
+    public string lootText;
+    public string wallText;
 
     // Start is called before the first frame update
     void Start()
@@ -90,6 +96,8 @@ public class Level1Manager : MonoBehaviour
         Craft();
         CraftTable();
         AbleCraft();
+        Loot();
+        WallBreak();
     }
 
     void GameInit()
@@ -210,9 +218,11 @@ public class Level1Manager : MonoBehaviour
 
         if (combatStart)
         {
-            jess.transform.position = new Vector3(0, 0, 0);
+            jess.GetComponent<CharacterController>().enabled = false;
+            jess.transform.position = new Vector3(-12f, -0.05000004f, 29f);
+            Debug.Log(jess.transform.position.x);
             jess.GetComponent<NPCBehavior>().currentState = NPCBehavior.NPCStates.Chase;
-            
+
             tutorialHints.transform.Find("Hints/TitleText").GetComponent<Text>().text = "Combat";
             tutorialHints.transform.Find("Hints/MainText").GetComponent<Text>().text = combatText;
             PauseGame(tutorialHints);
@@ -222,6 +232,7 @@ public class Level1Manager : MonoBehaviour
                 cameraController.enabled = false;
                 playerController.enabled = false;
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                jess.GetComponent<CharacterController>().enabled = true;
                 combatStart = false;
             }
         }
@@ -243,9 +254,13 @@ public class Level1Manager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.F))
             {
+                jess.GetComponent<CharacterController>().enabled = false;
+                jess.transform.position = new Vector3(-8.92f, -0.05000004f, 27f);
+                jess.GetComponent<NPCBehavior>().currentState = NPCBehavior.NPCStates.Idle;
                 cameraController.enabled = false;
                 playerController.enabled = false;
                 hasDead = false;
+                jess.GetComponent<CharacterController>().enabled = false;
             }
         }
     }
@@ -354,6 +369,54 @@ public class Level1Manager : MonoBehaviour
                 playerController.enabled = false;
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                 ableCraft = false;
+            }
+        }
+    }
+
+    void Loot()
+    {
+        if (jess.GetComponent<NPCBehavior>().dying && lootCount == 1)
+        {
+            looting = true;
+            lootCount--;
+        }
+
+        if (looting)
+        {
+            tutorialHints.transform.Find("Hints/TitleText").GetComponent<Text>().text = "Looting";
+            tutorialHints.transform.Find("Hints/MainText").GetComponent<Text>().text = lootText;
+            PauseGame(tutorialHints);
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                looting = false;
+            }
+        }
+    }
+
+    void WallBreak()
+    {
+        foreach (InventorySlot slot in toolBar)
+        {
+            if (slot.transform.childCount > 0 && slot.transform.GetChild(0).name == "Pickaxe" && axeCount == 1)
+            {
+                wallBreaking = true;
+                axeCount--;
+            }
+        }
+
+        if (wallBreaking)
+        {
+            tutorialHints.transform.Find("Hints/TitleText").GetComponent<Text>().text = "Wall Breaking";
+            tutorialHints.transform.Find("Hints/MainText").GetComponent<Text>().text = wallText;
+            PauseGame(tutorialHints);
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                cameraController.enabled = false;
+                playerController.enabled = false;
+                GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                wallBreaking = false;
             }
         }
     }
