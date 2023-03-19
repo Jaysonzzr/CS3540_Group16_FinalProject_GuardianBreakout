@@ -21,6 +21,8 @@ public class FinishMission : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public bool getReward = false;
     int getTime = 1;
 
+    public AudioClip sellSFX;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,7 +57,7 @@ public class FinishMission : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         
         if (entering)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !missionFinished)
             {
                 finishImage.color = finishedColor;
                 finishText.text = "Finished";
@@ -63,6 +65,7 @@ public class FinishMission : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 missionFinished = true;
                 getReward = true;
 
+                AudioSource.PlayClipAtPoint(sellSFX, Camera.main.transform.position);
                 myCanvas.transform.Find("Missions/Missions/" + name).gameObject.SetActive(false);
             }
         }

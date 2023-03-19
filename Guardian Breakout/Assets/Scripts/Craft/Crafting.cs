@@ -13,6 +13,7 @@ public class Crafting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public Color unableCraftColor;
     public Image image;
     public Slider craftProcess;
+    public AudioClip craftSFX;
 
     bool couldCraft;
     float currentProcess;
@@ -71,6 +72,7 @@ public class Crafting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     string prefabName = craftTable.name;
                     GameObject prefab = Resources.Load<GameObject>("Prefabs/UI/Items/" + prefabName);
 
+                    AudioSource.PlayClipAtPoint(craftSFX, Camera.main.transform.position);
                     GameObject newPrefabInstance = Instantiate(prefab, slot.transform.position, slot.transform.rotation);
                     newPrefabInstance.transform.SetParent(slot.transform);
                     currentProcess = 0.0f;

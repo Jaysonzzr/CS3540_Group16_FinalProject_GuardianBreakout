@@ -24,6 +24,11 @@ public class PlayerBehavior : MonoBehaviour
     Vector3 crowbarPos;
     Quaternion crowbarRot;
 
+    public AudioClip hurtSFX1;
+    public AudioClip hurtSFX2;
+    public AudioClip deadSFX1;
+    public AudioClip deadSFX2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -116,6 +121,17 @@ public class PlayerBehavior : MonoBehaviour
 
         if (hurted)
         {
+            if (GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth > 0)
+            {
+                AudioClip hurtSFX = Random.Range(0, 2) == 0 ? hurtSFX1 : hurtSFX2;
+                AudioSource.PlayClipAtPoint(hurtSFX, Camera.main.transform.position);
+            }
+            else
+            {
+                AudioClip deadSFX = Random.Range(0, 2) == 0 ? deadSFX1 : deadSFX2;
+                AudioSource.PlayClipAtPoint(deadSFX, Camera.main.transform.position);
+            }
+
             TakeDamage();
             getHurt = true;
             hurted = false;

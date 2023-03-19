@@ -20,6 +20,8 @@ public class OnMouseOverTradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
     bool unlock = false;
     int costTime = 1;
 
+    public AudioClip sellSFX;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -61,7 +63,7 @@ public class OnMouseOverTradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
     // Update is called once per frame
     void Update()
     {
-        if (entering)
+        if (entering && !unlock)
         {
             string npcName = transform.parent.parent.parent.name;
             if (GameObject.Find("NPCs/" + npcName).gameObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Dead)
@@ -70,6 +72,7 @@ public class OnMouseOverTradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
             }
             else if (Input.GetMouseButtonDown(0) && affordable)
             {
+                AudioSource.PlayClipAtPoint(sellSFX, Camera.main.transform.position);
                 unlock = true;
             }
         }

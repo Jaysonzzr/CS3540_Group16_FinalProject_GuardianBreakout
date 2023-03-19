@@ -45,6 +45,17 @@ public class ObjectsInteractive : MonoBehaviour
     GameObject tradingNpc;
     public GameObject[] inventories;
 
+    public AudioClip tradeSFX1;
+    public AudioClip tradeSFX2;
+
+    public AudioClip bookSFX1;
+    public AudioClip bookSFX2;
+
+    public AudioClip workoutSFX1;
+    public AudioClip workoutSFX2;
+
+    public AudioSource washSFX;
+
     private void Start() 
     {
         player = GameObject.FindWithTag("Player");
@@ -239,6 +250,8 @@ public class ObjectsInteractive : MonoBehaviour
                             player.GetComponent<PlayerBehavior>().getHurt = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
+
+                            washSFX.Play();
                             
                             if (hitObject.CompareTag("ShowerF"))
                             {
@@ -285,6 +298,9 @@ public class ObjectsInteractive : MonoBehaviour
                             player.GetComponent<PlayerBehavior>().getHurt = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
+
+                            AudioClip workoutSFX = UnityEngine.Random.Range(0, 2) == 0 ? workoutSFX1 : workoutSFX2;
+                            AudioSource.PlayClipAtPoint(workoutSFX, hitObject.transform.position);
                             
                             Camera.main.transform.position = new Vector3(
                                 hitObject.transform.position.x - 0.75f, hitObject.transform.position.y + 0.6f, hitObject.transform.position.z - 0.048f
@@ -317,6 +333,9 @@ public class ObjectsInteractive : MonoBehaviour
                             player.GetComponent<PlayerBehavior>().getHurt = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
+                            
+                            AudioClip bookSFX = UnityEngine.Random.Range(0, 2) == 0 ? bookSFX1 : bookSFX2;
+                            AudioSource.PlayClipAtPoint(bookSFX, hitObject.transform.position);
                             
                             Camera.main.transform.position = new Vector3(
                                 hitObject.transform.position.x - 1.08f, hitObject.transform.position.y + 1.98f, hitObject.transform.position.z - 0.648f
@@ -377,6 +396,12 @@ public class ObjectsInteractive : MonoBehaviour
                                     Cursor.visible = true;
 
                                     tradingNpc = hitObject;
+
+                                    if (hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Dead)
+                                    {
+                                        AudioClip tradeSFX = UnityEngine.Random.Range(0, 2) == 0 ? tradeSFX1 : tradeSFX2;
+                                        AudioSource.PlayClipAtPoint(tradeSFX, hitObject.transform.position);
+                                    }
 
                                     GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                                     player.GetComponent<PlayerBehavior>().getHurt = false;
@@ -470,7 +495,6 @@ public class ObjectsInteractive : MonoBehaviour
                 {
                     if (inventory.activeSelf)
                     {
-                        Debug.Log("ASD");
                         inventory.SetActive(false);
                         infoText.enabled = true;
                         playerController.enabled = true;
@@ -548,6 +572,7 @@ public class ObjectsInteractive : MonoBehaviour
                 if (showering)
                 {
                     showering = false;
+                    washSFX.Stop();
                     Destroy(shower, 5 * Time.deltaTime);
                 }
             }

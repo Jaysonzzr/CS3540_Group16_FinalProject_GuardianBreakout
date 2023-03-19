@@ -21,6 +21,9 @@ public class Level1Manager : MonoBehaviour
     public GameObject trade;
     public GameObject craftTable;
 
+    public AudioClip openUISFX;
+    public AudioClip closeUISFX;
+
     bool gameStart = false;
     bool accept = false;
     bool combatStart = false;
@@ -154,6 +157,7 @@ public class Level1Manager : MonoBehaviour
 
         tutorialHints.transform.Find("Hints/TitleText").GetComponent<Text>().text = "Guardian Breakout";
         tutorialHints.transform.Find("Hints/MainText").GetComponent<Text>().text = welcomeText;
+        // AudioSource.PlayClipAtPoint(openUISFX, Camera.main.transform.position);
 
         cameraController.enabled = false;
         playerController.enabled = false;
@@ -166,6 +170,7 @@ public class Level1Manager : MonoBehaviour
             Time.timeScale = 1;
             GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
             Camera.main.GetComponent<ObjectsInteractive>().enabled = true;
+            // AudioSource.PlayClipAtPoint(closeUISFX, Camera.main.transform.position);
             cameraController.enabled = true;
             playerController.enabled = true;
             tutorialHints.SetActive(false);

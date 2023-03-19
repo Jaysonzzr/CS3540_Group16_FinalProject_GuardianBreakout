@@ -51,7 +51,14 @@ public class NPCBehavior : MonoBehaviour
     private float bounceBackEndTime = 0f;
 
     public bool getHurt = false;
+    bool hasDead;
     float hurtTime = 0;
+
+    public AudioClip hurtSFX1;
+    public AudioClip hurtSFX2;
+
+    public AudioClip deadSFX1;
+    public AudioClip deadSFX2;
 
     // Start is called before the first frame update
     void Start()
@@ -61,7 +68,7 @@ public class NPCBehavior : MonoBehaviour
         anim = GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();
         currentState = NPCStates.Idle;
-        FindNextPoint();
+        // FindNextPoint();
 
         currentHealth = startingHealth;
     }
@@ -102,6 +109,9 @@ public class NPCBehavior : MonoBehaviour
 
         if (getHurt)
         {
+            AudioClip hurtSFX = UnityEngine.Random.Range(0, 2) == 0 ? hurtSFX1 : hurtSFX2;
+            AudioSource.PlayClipAtPoint(hurtSFX, transform.position);
+
             TakeDamage();
             currentState = NPCStates.Hurt;
             hurtTime = 0.0f;
@@ -121,9 +131,10 @@ public class NPCBehavior : MonoBehaviour
             controller.enabled = false;
         }
 
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 && !hasDead)
         {
             dying = true;
+            hasDead = true;
             currentState = NPCStates.Dead;
         }
     }
@@ -131,17 +142,19 @@ public class NPCBehavior : MonoBehaviour
     void UpdateIdleState()
     {
         anim.SetInteger("animState", 0);
+        hasDead = false;
+        currentHealth = startingHealth;
     }
 
     void UpdatePatrolState()
     {
         anim.SetInteger("animState", 1);
-
+        /*
         if (Vector3.Distance(transform.position, nextDestination) < 3)
         {
             FindNextPoint();
         }
-
+        */
         FaceTarget(nextDestination);
     }
 
@@ -240,7 +253,7 @@ public class NPCBehavior : MonoBehaviour
     {
         anim.SetInteger("animState", 5);
 
-        if (GameObject.Find("LevelManager").GetComponent<TimeManager>().currentTime.Hour == deadTime + 1)
+        if (GameObject.Find("LevelManager").GetComponent<TimeManager>().currentTime.Hour == deadTime + 2)
         {
             Vector3 viewportPos = Camera.main.WorldToViewportPoint(gameObject.transform.position);
 
@@ -254,11 +267,14 @@ public class NPCBehavior : MonoBehaviour
 
         if (dying)
         {
+            AudioClip deadSFX = UnityEngine.Random.Range(0, 2) == 0 ? deadSFX1 : deadSFX2;
+            AudioSource.PlayClipAtPoint(deadSFX, transform.position);
+
             deadTime = GameObject.Find("LevelManager").GetComponent<TimeManager>().currentTime.Hour;
             dying = false;
         }
     }
-
+    /*
     void FindNextPoint()
     {
         nextDestination = wanderPoints[currentDestinationIdx].transform.position;
@@ -266,7 +282,7 @@ public class NPCBehavior : MonoBehaviour
         currentDestinationIdx = (currentDestinationIdx + 1) 
             % wanderPoints.Length;
     }
-
+    */
     void FaceTarget(Vector3 target)
     {
         Vector3 directionToTarget = (target - transform.position).normalized;

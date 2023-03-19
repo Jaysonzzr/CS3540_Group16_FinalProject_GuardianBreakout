@@ -22,6 +22,10 @@ public class PlayerController : MonoBehaviour
     float currentAttackTime = 0;
     float currentDuration = 0;
 
+    public AudioClip crowbarSFX;
+    public AudioClip handSFX1;
+    public AudioClip handSFX2;
+
     Vector3 crowbarPos;
     Quaternion crowbarRot;
 
@@ -75,6 +79,9 @@ public class PlayerController : MonoBehaviour
             int selectedSlotIdx = GameObject.FindObjectOfType<InventoryManager>().selectedSlot;
             if (toolBar[selectedSlotIdx].transform.childCount == 0 && Input.GetMouseButtonDown(0))
             {
+                AudioClip handSFX = Random.Range(0, 2) == 0 ? handSFX1 : handSFX2;
+
+                AudioSource.PlayClipAtPoint(handSFX, Camera.main.transform.position);
                 transform.GetComponent<PlayerBehavior>().damage = Mathf.RoundToInt(10 * transform.GetComponent<PlayerBehavior>().damageBonus);
                 attacking = true;
                 currentAttackTime = 0.0f;
@@ -111,6 +118,7 @@ public class PlayerController : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 GameObject crowbar = Camera.main.transform.Find("Crowbar").gameObject;
+                AudioSource.PlayClipAtPoint(crowbarSFX, crowbar.transform.position);
                 
                 crowbar.transform.localPosition = crowbarPos;
                 crowbar.transform.localRotation = crowbarRot;
