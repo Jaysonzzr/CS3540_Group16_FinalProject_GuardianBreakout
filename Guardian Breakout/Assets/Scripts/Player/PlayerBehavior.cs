@@ -14,18 +14,29 @@ public class PlayerBehavior : MonoBehaviour
     public float bounceBackSpeed = 15f;
     public float bounceBackDuration = 0.5f;
 
+    public int damage;
+    public float damageBonus;
+
     private float bounceBackEndTime = 0f;
     CharacterController controller;
+
+    Vector3 crowbarPos;
+    Quaternion crowbarRot;
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
+
+        crowbarPos = Camera.main.transform.Find("Crowbar").transform.localPosition;
+        crowbarRot = Camera.main.transform.Find("Crowbar").transform.localRotation;
     }
 
     // Update is called once per frame
     void Update()
     {
+        damageBonus = GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentStrength / 20;
+
         int selectedSlotIdx = GameObject.FindObjectOfType<InventoryManager>().selectedSlot;
         if (toolBar[selectedSlotIdx].transform.childCount > 0 && 
             toolBar[selectedSlotIdx].transform.GetChild(0).name == "Meal(Clone)")
@@ -53,10 +64,18 @@ public class PlayerBehavior : MonoBehaviour
             toolBar[selectedSlotIdx].transform.GetChild(0).name == "Crowbar(Clone)"))
         {
             Camera.main.transform.Find("Crowbar").gameObject.SetActive(true);
+
+            damage = Mathf.RoundToInt(40 * damageBonus);
+            GetComponent<PlayerController>().PlayerCrowbarAttack();
         }
         else
         {
-            Camera.main.transform.Find("Crowbar").gameObject.SetActive(false);
+            GameObject crowbar = Camera.main.transform.Find("Crowbar").gameObject;
+            
+            crowbar.transform.localPosition = crowbarPos;
+            crowbar.transform.localRotation = crowbarRot;
+            transform.GetComponent<PlayerController>().crwobarAttack = false;
+            crowbar.SetActive(false);
         }
 
         if (GameObject.Find("LevelManager").GetComponent<PlayerStats>().isDead)
@@ -100,7 +119,7 @@ public class PlayerBehavior : MonoBehaviour
             getHurt = false;
         }
 
-        if (Time.time < bounceBackEndTime && GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth >= 0)
+        if (Time.time < bounceBackEndTime && GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth >= 20)
         {
             // Apply move direction with a certain speed
             controller.SimpleMove(hurtDirection.normalized * bounceBackSpeed);

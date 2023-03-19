@@ -17,9 +17,13 @@ public class PlayerController : MonoBehaviour
 
     public BoxCollider damageBox;
     bool attacking;
+    public bool crwobarAttack;
     float attackCoolDown = 2f;
     float currentAttackTime = 0;
     float currentDuration = 0;
+
+    Vector3 crowbarPos;
+    Quaternion crowbarRot;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +31,9 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         playerAnim = Camera.main.transform.Find("PlayerBody").GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();
+
+        crowbarPos = Camera.main.transform.Find("Crowbar").transform.localPosition;
+        crowbarRot = Camera.main.transform.Find("Crowbar").transform.localRotation;
     }
 
     // Update is called once per frame
@@ -68,6 +75,7 @@ public class PlayerController : MonoBehaviour
             int selectedSlotIdx = GameObject.FindObjectOfType<InventoryManager>().selectedSlot;
             if (toolBar[selectedSlotIdx].transform.childCount == 0 && Input.GetMouseButtonDown(0))
             {
+                transform.GetComponent<PlayerBehavior>().damage = Mathf.RoundToInt(10 * transform.GetComponent<PlayerBehavior>().damageBonus);
                 attacking = true;
                 currentAttackTime = 0.0f;
                 currentDuration = 0.0f;
@@ -91,6 +99,50 @@ public class PlayerController : MonoBehaviour
             {
                 currentDuration += Time.deltaTime;
             } 
+        }
+    }
+
+    public void PlayerCrowbarAttack()
+    {
+        Animator anim = Camera.main.transform.Find("Crowbar").GetComponent<Animator>();
+
+        if (currentAttackTime >= attackCoolDown)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                GameObject crowbar = Camera.main.transform.Find("Crowbar").gameObject;
+                
+                crowbar.transform.localPosition = crowbarPos;
+                crowbar.transform.localRotation = crowbarRot;
+
+                crwobarAttack = true;
+                currentAttackTime = 0.0f;
+                currentDuration = 0.0f;
+                damageBox.enabled = true;
+            }
+        }
+
+        if (crwobarAttack)
+        {
+            anim.SetInteger("is_attacking", 1);
+            var animDuration = anim.GetCurrentAnimatorStateInfo(0).length;
+            
+            if (currentDuration > animDuration)
+            {
+                currentDuration = 0.0f;
+                damageBox.enabled = false;
+                anim.SetInteger("is_attacking", 0);
+                crwobarAttack = false;
+            }
+            else
+            {
+                currentDuration += Time.deltaTime;
+            } 
+        }
+        else
+        {
+            damageBox.enabled = false;
+            anim.SetInteger("is_attacking", 0);
         }
     }
 }

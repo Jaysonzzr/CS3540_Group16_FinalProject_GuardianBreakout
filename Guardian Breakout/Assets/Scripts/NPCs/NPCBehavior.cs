@@ -20,6 +20,9 @@ public class NPCBehavior : MonoBehaviour
 
     public NPCStates currentState;
 
+    public float startingHealth;
+    public float currentHealth;
+
     public GameObject player;
     private CharacterController controller;
     Animator anim;
@@ -57,8 +60,10 @@ public class NPCBehavior : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();
-        currentState = NPCStates.Sit;
+        currentState = NPCStates.Idle;
         FindNextPoint();
+
+        currentHealth = startingHealth;
     }
 
     // Update is called once per frame
@@ -69,6 +74,9 @@ public class NPCBehavior : MonoBehaviour
 
         switch(currentState)
         {
+            case NPCStates.Idle:
+                UpdateIdleState();
+                break;
             case NPCStates.Patrol:
                 UpdatePatrolState();
                 break;
@@ -112,6 +120,17 @@ public class NPCBehavior : MonoBehaviour
         {
             controller.enabled = false;
         }
+
+        if (currentHealth <= 0)
+        {
+            dying = true;
+            currentState = NPCStates.Dead;
+        }
+    }
+
+    void UpdateIdleState()
+    {
+        anim.SetInteger("animState", 0);
     }
 
     void UpdatePatrolState()
@@ -129,6 +148,7 @@ public class NPCBehavior : MonoBehaviour
     void UpdateTradeState()
     {
         anim.SetInteger("animState", 3);
+        FaceTarget(player.transform.position);
     }
 
     void UpdateHurtState()
@@ -169,7 +189,7 @@ public class NPCBehavior : MonoBehaviour
         }
         else if (distanceToPlayer > chaseDistance)
         {
-            currentState = NPCStates.Patrol;
+            currentState = NPCStates.Idle;
         }
 
         FaceTarget(player.transform.position);
@@ -177,7 +197,6 @@ public class NPCBehavior : MonoBehaviour
 
     void UpdateAttackState()
     {
-
         if (distanceToPlayer <= attackDistance)
         {
             currentState = NPCStates.Attack;
@@ -188,7 +207,7 @@ public class NPCBehavior : MonoBehaviour
         }
         else if (distanceToPlayer > chaseDistance)
         {
-            currentState = NPCStates.Patrol;
+            currentState = NPCStates.Idle;
         }
 
         FaceTarget(player.transform.position);
@@ -228,8 +247,8 @@ public class NPCBehavior : MonoBehaviour
             // Check if the game object is outside the camera view.
             if (viewportPos.x < 0 || viewportPos.x > 1 || viewportPos.y < 0 || viewportPos.y > 1) 
             {
-                transform.position = new Vector3(0, 0, 0);
-                currentState = NPCStates.Patrol;
+                // transform.position = new Vector3(0, 0, 0);
+                currentState = NPCStates.Idle;
             }
         }
 
@@ -266,9 +285,10 @@ public class NPCBehavior : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) 
     {
-        if (other.CompareTag("PlayerDamageBox"))
+        if (other.CompareTag("PlayerDamageBox") && currentState != NPCStates.Dead)
         {
             getHurt = true;
+            currentHealth -= other.transform.parent.GetComponent<PlayerBehavior>().damage;
             other.enabled = false;
         }
     }

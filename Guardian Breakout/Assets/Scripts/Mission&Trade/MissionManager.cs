@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class MissionManager : MonoBehaviour
 {
     public Canvas myCanvas;
+    public InventorySlot[] toolBar;
 
     public AudioClip openUISFX;
     public AudioClip closeUISFX;
@@ -47,10 +48,14 @@ public class MissionManager : MonoBehaviour
             if (missions.GetChild(i).gameObject.activeSelf)
             {
                 GameObject npc = myCanvas.transform.Find("NPCsInventories/" + missions.GetChild(i).name).gameObject;
-                
-                if (npc.transform.Find("MyInventory/MainMission/Finish").gameObject.GetComponent<FinishMission>().couldFinish)
+
+                foreach (InventorySlot slot in toolBar)
                 {
-                    missions.GetChild(i).transform.Find("Finish").gameObject.SetActive(true);
+                    if (slot.transform.childCount > 0 &&
+                        slot.transform.GetChild(0).name == npc.transform.Find("MyInventory/MainMission/Requires").GetComponent<MissionRequires>().require)
+                    {
+                        missions.GetChild(i).transform.Find("Finish").gameObject.SetActive(true);
+                    }
                 }
             }
         }
