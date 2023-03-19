@@ -42,6 +42,9 @@ public class ObjectsInteractive : MonoBehaviour
     public GameObject water;
     GameObject shower;
 
+    GameObject tradingNpc;
+    public GameObject[] inventories;
+
     private void Start() 
     {
         player = GameObject.FindWithTag("Player");
@@ -74,7 +77,7 @@ public class ObjectsInteractive : MonoBehaviour
                         GameObject obj = myCanvas.transform.Find("Inventories/" + hitObject.name.ToString() + "Inventory").gameObject;
                         if (obj.activeSelf)
                         {
-                            if (Input.GetKeyDown(KeyCode.E))
+                            if (Input.GetKeyDown(KeyCode.E) || player.GetComponent<PlayerBehavior>().getHurt)
                             {
                                 obj.SetActive(false);
                                 infoText.enabled = true;
@@ -85,11 +88,12 @@ public class ObjectsInteractive : MonoBehaviour
                                 Cursor.visible = false;
 
                                 GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
+                                player.GetComponent<PlayerBehavior>().getHurt = false;
                             }
                         }
                         else
                         {
-                            if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
+                            if ((Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI))
                             {
                                 obj.SetActive(true);
                                 infoText.enabled = false;
@@ -100,6 +104,7 @@ public class ObjectsInteractive : MonoBehaviour
                                 Cursor.visible = true;
 
                                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                                player.GetComponent<PlayerBehavior>().getHurt = false;
                             }
                         }
                     }
@@ -111,7 +116,7 @@ public class ObjectsInteractive : MonoBehaviour
                         GameObject obj = myCanvas.transform.Find("Inventories/" + hitObject.name.ToString() + "Inventory").gameObject;
                         if (obj.activeSelf)
                         {
-                            if (Input.GetKeyDown(KeyCode.E))
+                            if (Input.GetKeyDown(KeyCode.E) || player.GetComponent<PlayerBehavior>().getHurt)
                             {
                                 obj.SetActive(false);
                                 infoText.enabled = true;
@@ -125,6 +130,7 @@ public class ObjectsInteractive : MonoBehaviour
                                 opening = false;
 
                                 GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
+                                player.GetComponent<PlayerBehavior>().getHurt = false;
                             }
                         }
                         else
@@ -139,6 +145,7 @@ public class ObjectsInteractive : MonoBehaviour
                                 processBar.gameObject.SetActive(true);
 
                                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                                player.GetComponent<PlayerBehavior>().getHurt = false;
                             }
 
                             if (coolDown <= 0)
@@ -188,7 +195,8 @@ public class ObjectsInteractive : MonoBehaviour
 
                         if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
                         {
-                            player.GetComponent<CharacterController>().enabled = false;
+                            // player.GetComponent<CharacterController>().enabled = false;
+                            player.GetComponent<PlayerBehavior>().getHurt = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
                             
@@ -227,7 +235,8 @@ public class ObjectsInteractive : MonoBehaviour
 
                         if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
                         {
-                            player.GetComponent<CharacterController>().enabled = false;
+                            // player.GetComponent<CharacterController>().enabled = false;
+                            player.GetComponent<PlayerBehavior>().getHurt = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
                             
@@ -272,7 +281,8 @@ public class ObjectsInteractive : MonoBehaviour
 
                         if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
                         {
-                            player.GetComponent<CharacterController>().enabled = false;
+                            // player.GetComponent<CharacterController>().enabled = false;
+                            player.GetComponent<PlayerBehavior>().getHurt = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
                             
@@ -303,7 +313,8 @@ public class ObjectsInteractive : MonoBehaviour
 
                         if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
                         {
-                            player.GetComponent<CharacterController>().enabled = false;
+                            // player.GetComponent<CharacterController>().enabled = false;
+                            player.GetComponent<PlayerBehavior>().getHurt = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
                             
@@ -330,8 +341,8 @@ public class ObjectsInteractive : MonoBehaviour
 
                     if (hitObject.CompareTag("NPC"))
                     {
-                        if (hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Hurt ||
-                            hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Chase ||
+                        if (hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Hurt &&
+                            hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Chase &&
                             hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Attack)
                         {
                             infoText.text = hitObject.name + " (E)";
@@ -339,7 +350,7 @@ public class ObjectsInteractive : MonoBehaviour
                             GameObject obj = myCanvas.transform.Find("NPCsInventories/" + hitObject.name.ToString()).gameObject;
                             if (obj.activeSelf)
                             {
-                                if (Input.GetKeyDown(KeyCode.E))
+                                if (Input.GetKeyDown(KeyCode.E) || player.GetComponent<PlayerBehavior>().getHurt)
                                 {
                                     obj.SetActive(false);
                                     infoText.enabled = true;
@@ -349,6 +360,7 @@ public class ObjectsInteractive : MonoBehaviour
                                     Cursor.visible = false;
 
                                     GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
+                                    player.GetComponent<PlayerBehavior>().getHurt = false;
 
                                     hitObject.GetComponent<NPCBehavior>().currentState = originState;
                                 }
@@ -364,7 +376,10 @@ public class ObjectsInteractive : MonoBehaviour
                                     Cursor.lockState = CursorLockMode.None;
                                     Cursor.visible = true;
 
+                                    tradingNpc = hitObject;
+
                                     GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                                    player.GetComponent<PlayerBehavior>().getHurt = false;
 
                                     originState = hitObject.GetComponent<NPCBehavior>().currentState;
                                     
@@ -411,7 +426,8 @@ public class ObjectsInteractive : MonoBehaviour
 
                             if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
                             {
-                                player.GetComponent<CharacterController>().enabled = false;
+                                // player.GetComponent<CharacterController>().enabled = false;
+                                player.GetComponent<PlayerBehavior>().getHurt = false;
                                 playerController.enabled = false;
                                 cameraController.enabled = false;
                                 
@@ -449,6 +465,27 @@ public class ObjectsInteractive : MonoBehaviour
             {
                 // Clear the information text if the player isn't looking at an inspectable object
                 infoText.text = "";
+
+                foreach (GameObject inventory in inventories)
+                {
+                    if (inventory.activeSelf)
+                    {
+                        Debug.Log("ASD");
+                        inventory.SetActive(false);
+                        infoText.enabled = true;
+                        playerController.enabled = true;
+                        cameraController.enabled = true;
+                        Cursor.lockState = CursorLockMode.Locked;
+                        Cursor.visible = false;
+                        currentProcess = 0.0f;
+                        opening = false;
+
+                        GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
+                        player.GetComponent<PlayerBehavior>().getHurt = false;
+
+                        tradingNpc.GetComponent<NPCBehavior>().currentState = originState;
+                    }
+                }
             }
         }
         else
@@ -461,7 +498,7 @@ public class ObjectsInteractive : MonoBehaviour
         {
             GameObject.Find("LevelManager").GetComponent<InventoryManager>().lockLootBar = true;
             
-            if (Input.GetKeyDown(KeyCode.E) && coolDown <= 0)
+            if ((Input.GetKeyDown(KeyCode.E) && coolDown <= 0) || player.GetComponent<PlayerBehavior>().getHurt)
             {
                 GameObject.Find("LevelManager").GetComponent<InventoryManager>().lockLootBar = false;
                 GameObject.FindObjectOfType<PlayerStats>().lockStats = false;
@@ -472,6 +509,7 @@ public class ObjectsInteractive : MonoBehaviour
 
                 locked = false;
 
+                player.GetComponent<PlayerBehavior>().getHurt = false;
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
                 currentProcess = 0.0f;
 

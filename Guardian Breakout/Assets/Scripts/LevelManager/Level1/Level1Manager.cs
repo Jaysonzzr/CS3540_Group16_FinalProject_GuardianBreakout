@@ -337,6 +337,7 @@ public class Level1Manager : MonoBehaviour
         {
             tutorialHints.transform.Find("Hints/TitleText").GetComponent<Text>().text = "Craft system";
             tutorialHints.transform.Find("Hints/MainText").GetComponent<Text>().text = craftTableText;
+            GameObject.Find("LevelManager").GetComponent<CraftManager>().enabled = false;
             PauseGame(tutorialHints);
 
             if (Input.GetKeyDown(KeyCode.F))
@@ -344,6 +345,7 @@ public class Level1Manager : MonoBehaviour
                 cameraController.enabled = false;
                 playerController.enabled = false;
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                GameObject.Find("LevelManager").GetComponent<CraftManager>().enabled = true;
                 crafting = false;
             }
         }

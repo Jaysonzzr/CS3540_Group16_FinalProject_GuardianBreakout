@@ -28,7 +28,7 @@ public class CraftManager : MonoBehaviour
         GameObject obj = myCanvas.transform.Find("CraftTable").gameObject;
         if (obj.activeSelf)
         {
-            if (Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.C) || GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt)
             {
                 obj.SetActive(false);
                 AudioSource.PlayClipAtPoint(closeUISFX, Camera.main.transform.position);
@@ -38,6 +38,7 @@ public class CraftManager : MonoBehaviour
                 Cursor.visible = false;
 
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
+                GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;
 
                 GameObject tables = myCanvas.transform.Find("CraftTable/Items/Crafts").gameObject;
                 
@@ -72,6 +73,7 @@ public class CraftManager : MonoBehaviour
                 Cursor.visible = true;
 
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;
             }
         }
     }

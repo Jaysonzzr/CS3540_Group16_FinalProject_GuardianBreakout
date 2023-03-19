@@ -9,7 +9,8 @@ public class PlayerBehavior : MonoBehaviour
     float increaseTime = 1;
     float currentTime;
 
-    bool getHurt = false;
+    bool hurted = false;
+    public bool getHurt = false;
     Vector3 hurtDirection;
     public float bounceBackSpeed = 15f;
     public float bounceBackDuration = 0.5f;
@@ -113,10 +114,11 @@ public class PlayerBehavior : MonoBehaviour
             }
         }
 
-        if (getHurt)
+        if (hurted)
         {
             TakeDamage();
-            getHurt = false;
+            getHurt = true;
+            hurted = false;
         }
 
         if (Time.time < bounceBackEndTime && GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth >= 20)
@@ -136,7 +138,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (other.CompareTag("NPCDamageBox"))
         {
-            getHurt = true;
+            hurted = true;
             hurtDirection = other.gameObject.transform.forward;
             GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth -= other.transform.parent.GetComponent<NPCBehavior>().npcDamage;
             other.enabled = false;
