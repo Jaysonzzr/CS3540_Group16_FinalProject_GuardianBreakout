@@ -159,5 +159,10 @@ public class PlayerBehavior : MonoBehaviour
             GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth -= other.transform.parent.GetComponent<NPCBehavior>().npcDamage;
             other.enabled = false;
         }
+
+        else if (other.CompareTag("Win"))
+        {
+            FindObjectOfType<LevelManager>().LevelBeat();
+        }
     }
 }
