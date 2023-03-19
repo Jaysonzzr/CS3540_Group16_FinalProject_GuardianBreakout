@@ -72,7 +72,10 @@ public class PlayerBehavior : MonoBehaviour
             Camera.main.transform.Find("Crowbar").gameObject.SetActive(true);
 
             damage = Mathf.RoundToInt(40 * damageBonus);
-            GetComponent<PlayerController>().PlayerCrowbarAttack();
+            if (GetComponent<PlayerController>().enabled)
+            {
+                GetComponent<PlayerController>().PlayerCrowbarAttack();
+            }
         }
         else
         {

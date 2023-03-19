@@ -50,7 +50,9 @@ public class WallBreaker : MonoBehaviour
                     
                     if(waitTime <= 0)
                     {
-                        Destroy(hit.transform.gameObject);
+                        //Destroy(hit.transform.gameObject);
+                        hit.transform.GetComponent<MeshRenderer>().enabled = false;
+                        hit.transform.GetComponent<BoxCollider>().enabled = false;
                         currentProcess = 0.0f;
                         processBar.gameObject.SetActive(false);
                         waitTime = originalWaitTime;
