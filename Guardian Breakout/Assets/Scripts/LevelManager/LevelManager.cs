@@ -39,7 +39,7 @@ public class LevelManager : MonoBehaviour
         playerController.enabled = false;
         cameraController.enabled = false;
 
-        //Camera.main.GetComponent<AudioSource>().pitch = 2;
+        Camera.main.GetComponent<AudioSource>().pitch = 2;
         //AudioSource.PlayClipAtPoint(winSFX, Camera.main.transform.position);
 
         if (!string.IsNullOrEmpty(nextLevel))

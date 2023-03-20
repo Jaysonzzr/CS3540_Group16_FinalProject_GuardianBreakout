@@ -37,16 +37,6 @@ public class Level1Manager : MonoBehaviour
     bool looting = false;
     bool wallBreaking = false;
 
-    bool missionStart = false;
-    bool combatStart = false;
-    bool respawnStart = false;
-    bool finishStart = false;
-    bool craftStart = false;
-    bool craftTableStart = false;
-    bool ableCraftStart = false;
-    bool lootStart = false;
-    bool wallBreakStart = false;
-
     int keyCount = 1;
     int missionCount = 1;
     int combatCount = 1;
@@ -104,42 +94,15 @@ public class Level1Manager : MonoBehaviour
             GetUp();
         }
 
-        if (wallBreakStart)
-        {
-            WallBreak();
-        }
-        else if (lootStart)
-        {
-            Loot();
-        }
-        else if (ableCraftStart)
-        {
-            AbleCraft();
-        }
-        else if (craftTableStart)
-        {
-            CraftTable();
-        }
-        else if (craftStart)
-        {
-            Craft();
-        }
-        else if (finishStart)
-        {
-            Finish();
-        }
-        else if (respawnStart)
-        {
-            Respawn();
-        }
-        else if (combatStart)
-        {
-            Combat();
-        }
-        else if (missionStart)
-        {
-            Missions();
-        }
+        WallBreak();
+        Loot();
+        AbleCraft();
+        CraftTable();
+        Craft();
+        Finish();
+        Respawn();
+        Combat();
+        Missions();
     }
 
     void GameInit()
@@ -215,7 +178,6 @@ public class Level1Manager : MonoBehaviour
             tutorialHints.SetActive(false);
 
             gameStart = true;
-            missionStart = true;
         }
     }
 
@@ -245,21 +207,17 @@ public class Level1Manager : MonoBehaviour
                 }
 
                 accept = false;
-                combatStart = true;
             }
         }
     }
 
     void Combat()
     {
-        int selectedSlotIdx = GameObject.FindObjectOfType<InventoryManager>().selectedSlot;
-        foreach (InventorySlot slot in toolBar) 
+        if (inventoryManager.Has("Sock") && combatCount == 1)
         {
-            if (inventoryManager.Has("Sock") && combatCount == 1)
-            {
-                combat = true;
-                combatCount--;
-            }
+            combat = true;
+            finish = true;
+            combatCount--;
         }
 
         if (combat)
@@ -279,7 +237,6 @@ public class Level1Manager : MonoBehaviour
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                 jess.GetComponent<CharacterController>().enabled = true;
                 combat = false;
-                respawnStart = true;
             }
         }
     }
@@ -307,18 +264,12 @@ public class Level1Manager : MonoBehaviour
                 playerController.enabled = false;
                 hasDead = false;
                 jess.GetComponent<CharacterController>().enabled = false;
-                finishStart = true;
             }
         }
     }
 
     void Finish()
     {
-        if (inventoryManager.Has("Sock"))
-        {
-            finish = true;
-        }
-
         if (finish && trade.activeSelf && finishCount == 1)
         {
             tradeing = true;
@@ -337,7 +288,6 @@ public class Level1Manager : MonoBehaviour
                 playerController.enabled = false;
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                 tradeing = false;
-                craftStart = true;
             }
         }
     }
@@ -363,7 +313,6 @@ public class Level1Manager : MonoBehaviour
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                 GameObject.Find("LevelManager").GetComponent<CraftManager>().enabled = true;
                 couldCraft = false;
-                craftTableStart = true;
             }
         }
     }
@@ -390,7 +339,6 @@ public class Level1Manager : MonoBehaviour
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                 GameObject.Find("LevelManager").GetComponent<CraftManager>().enabled = true;
                 crafting = false;
-                ableCraftStart = true;
             }
         }
     }
@@ -415,7 +363,6 @@ public class Level1Manager : MonoBehaviour
                 playerController.enabled = false;
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                 ableCraft = false;
-                lootStart = true;
             }
         }
     }
@@ -437,7 +384,6 @@ public class Level1Manager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F))
             {
                 looting = false;
-                wallBreakStart = true;
             }
         }
     }
