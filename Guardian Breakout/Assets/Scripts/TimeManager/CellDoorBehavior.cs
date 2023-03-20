@@ -4,42 +4,37 @@ using UnityEngine;
 
 public class CellDoorBehavior : MonoBehaviour
 {
+    private GameObject[] cellDoors;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        cellDoors = GameObject.FindGameObjectsWithTag("CellDoor");
     }
 
     // Update is called once per frame
     void Update()
     {
-        GameObject[] cellDoorsF = GameObject.FindGameObjectsWithTag("CellDoorF");
-        foreach (GameObject obj in cellDoorsF) 
+        cellDoors = GameObject.FindGameObjectsWithTag("CellDoor");
+
+        if (!GameObject.Find("LevelManager").GetComponent<TimeManager>().cellDoorOpen)
         {
-            if (FindObjectOfType<TimeManager>().currentState == TimeManager.State.LightsOut)
+            foreach (GameObject obj in cellDoors)
             {
-                Quaternion targetRotation = Quaternion.Euler(0, 90, 0);
-                obj.transform.rotation = Quaternion.Lerp(obj.transform.rotation, targetRotation, Time.deltaTime);
-            }
-            else
-            {
-                Quaternion targetRotation = Quaternion.Euler(0, 180, 0);
-                obj.transform.rotation = Quaternion.Lerp(obj.transform.rotation, targetRotation, Time.deltaTime);
+                if (obj.transform.localRotation != Quaternion.Euler(0, 90, 0))
+                {
+                    obj.transform.localRotation = Quaternion.Lerp(obj.transform.localRotation, Quaternion.Euler(0, 90, 0), Time.deltaTime);
+                }
             }
         }
-
-        GameObject[] cellDoorsB = GameObject.FindGameObjectsWithTag("CellDoorB");
-        foreach (GameObject obj in cellDoorsB) 
+        else
         {
-            if (FindObjectOfType<TimeManager>().currentState == TimeManager.State.LightsOut)
+            foreach (GameObject obj in cellDoors)
             {
-                Quaternion targetRotation = Quaternion.Euler(0, -90, 0);
-                obj.transform.rotation = Quaternion.Lerp(obj.transform.rotation, targetRotation, Time.deltaTime);
-            }
-            else
-            {
-                Quaternion targetRotation = Quaternion.Euler(0, 0, 0);
-                obj.transform.rotation = Quaternion.Lerp(obj.transform.rotation, targetRotation, Time.deltaTime);
+                if (obj.transform.localRotation != Quaternion.Euler(0, 180, 0))
+                {
+                    obj.transform.localRotation = Quaternion.Lerp(obj.transform.localRotation, Quaternion.Euler(0, 180, 0), Time.deltaTime);
+                }
             }
         }
     }

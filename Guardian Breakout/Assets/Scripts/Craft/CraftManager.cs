@@ -50,16 +50,6 @@ public class CraftManager : MonoBehaviour
                     }
                 }
             }
-
-            foreach (InventorySlot slot in inventorySlots)
-            {
-                DraggableItem item = slot.GetComponentInChildren<DraggableItem>();
-
-                if (item != null)
-                {
-                    
-                }
-            }
         }
         else
         {

@@ -20,6 +20,7 @@ public class PlayerBehavior : MonoBehaviour
 
     private float bounceBackEndTime = 0f;
     CharacterController controller;
+    InventoryManager inventoryManager;
 
     Vector3 crowbarPos;
     Quaternion crowbarRot;
@@ -36,16 +37,16 @@ public class PlayerBehavior : MonoBehaviour
 
         crowbarPos = Camera.main.transform.Find("Crowbar").transform.localPosition;
         crowbarRot = Camera.main.transform.Find("Crowbar").transform.localRotation;
+
+        inventoryManager = GameObject.Find("LevelManager").GetComponent<InventoryManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        damageBonus = GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentStrength / 20;
+        damageBonus = GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentStrength / 30;
 
-        int selectedSlotIdx = GameObject.FindObjectOfType<InventoryManager>().selectedSlot;
-        if (toolBar[selectedSlotIdx].transform.childCount > 0 && 
-            toolBar[selectedSlotIdx].transform.GetChild(0).name == "Meal(Clone)")
+        if (inventoryManager.holdStuff && inventoryManager.holding.name == "Meal(Clone)")
         {
             Camera.main.transform.Find("Plate").gameObject.SetActive(true);
         }
@@ -54,9 +55,8 @@ public class PlayerBehavior : MonoBehaviour
             Camera.main.transform.Find("Plate").gameObject.SetActive(false);
         }
 
-        if (toolBar[selectedSlotIdx].transform.childCount > 0 &&
-            (toolBar[selectedSlotIdx].transform.GetChild(0).name == "Pickaxe" ||
-            toolBar[selectedSlotIdx].transform.GetChild(0).name == "Pickaxe(Clone)"))
+        if (inventoryManager.holdStuff && (inventoryManager.holding.name == "Pickaxe" ||
+            inventoryManager.holding.name == "Pickaxe(Clone)"))
         {
             Camera.main.transform.Find("Pickaxe").gameObject.SetActive(true);
         }
@@ -65,9 +65,8 @@ public class PlayerBehavior : MonoBehaviour
             Camera.main.transform.Find("Pickaxe").gameObject.SetActive(false);
         }
 
-        if (toolBar[selectedSlotIdx].transform.childCount > 0 &&
-            (toolBar[selectedSlotIdx].transform.GetChild(0).name == "Crowbar" ||
-            toolBar[selectedSlotIdx].transform.GetChild(0).name == "Crowbar(Clone)"))
+        if (inventoryManager.holdStuff && (inventoryManager.holding.name == "Crowbar" ||
+            inventoryManager.holding.name == "Crowbar(Clone)"))
         {
             Camera.main.transform.Find("Crowbar").gameObject.SetActive(true);
 
@@ -80,7 +79,7 @@ public class PlayerBehavior : MonoBehaviour
         else
         {
             GameObject crowbar = Camera.main.transform.Find("Crowbar").gameObject;
-            
+                
             crowbar.transform.localPosition = crowbarPos;
             crowbar.transform.localRotation = crowbarRot;
             transform.GetComponent<PlayerController>().crwobarAttack = false;

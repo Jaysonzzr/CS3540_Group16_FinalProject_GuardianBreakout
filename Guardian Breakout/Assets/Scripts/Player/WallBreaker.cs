@@ -8,29 +8,28 @@ public class WallBreaker : MonoBehaviour
     public float waitTime = 5;
     private float originalWaitTime;
     public float maxDistance = 5;
-
-    public InventorySlot[] toolBar;
     public Slider processBar;
 
     float currentProcess;
 
+    public InventoryManager inventoryManager;
+
     void Start()
     {
         originalWaitTime = waitTime;
+        inventoryManager = GameObject.Find("LevelManager").GetComponent<InventoryManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
         processBar.value = currentProcess;
-        int selectedSlotIdx = GameObject.FindObjectOfType<InventoryManager>().selectedSlot;
         if(Physics.Raycast(transform.position,transform.forward, out RaycastHit hit, maxDistance))
         {
             GameObject hitObject = hit.transform.gameObject;
             if (hitObject.CompareTag("Breakable"))
             {
-                if (toolBar[selectedSlotIdx].transform.childCount > 0 && 
-                    toolBar[selectedSlotIdx].transform.GetChild(0).name == "Pickaxe")
+                if (inventoryManager.holdStuff && inventoryManager.holding.name == "Pickaxe")
                 {
                     if(Input.GetMouseButton(0))
                     {

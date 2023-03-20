@@ -67,6 +67,7 @@ public class Crafting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             foreach (InventorySlot slot in inventorySlots)
             {
                 DeleteItems();
+                GameObject.Find("LevelManager").GetComponent<InventoryManager>().holdStuff = false;
                 if (slot.transform.childCount == 0)
                 {
                     string prefabName = craftTable.name;

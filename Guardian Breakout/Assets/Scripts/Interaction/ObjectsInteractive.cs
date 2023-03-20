@@ -11,10 +11,8 @@ public class ObjectsInteractive : MonoBehaviour
     public AudioClip closeInventorySFX;
     private PlayerController playerController;
     private CameraController cameraController;
+    private InventoryManager inventoryManager;
     public float maxDistance = 5.0f; // Maximum distance at which object info will be displayed
-
-    public InventorySlot[] toolBar;
-    int selectedSlotIdx;
 
     float currentProcess;
     bool opening = false;
@@ -59,16 +57,13 @@ public class ObjectsInteractive : MonoBehaviour
     private void Start() 
     {
         player = GameObject.FindWithTag("Player");
-        selectedSlotIdx = GameObject.FindObjectOfType<InventoryManager>().selectedSlot;
-
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         cameraController = Camera.main.GetComponent<CameraController>();
+        inventoryManager = GameObject.Find("LevelManager").GetComponent<InventoryManager>();
     }
 
     void Update()
     {
-        selectedSlotIdx = GameObject.FindObjectOfType<InventoryManager>().selectedSlot;
-
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
@@ -443,8 +438,7 @@ public class ObjectsInteractive : MonoBehaviour
                     {
                         infoText.enabled = true;
 
-                        if (toolBar[selectedSlotIdx].transform.childCount > 0 && 
-                            toolBar[selectedSlotIdx].transform.GetChild(0).name == "Meal(Clone)")
+                        if (inventoryManager.holdStuff && inventoryManager.holding.name == "Meal(Clone)")
                         {
                             infoText.text = hitObject.name + " (E)";
                             infoText.color = new Color(255/255f, 255/255f, 255/255f);
@@ -563,9 +557,10 @@ public class ObjectsInteractive : MonoBehaviour
                     Camera.main.transform.Find("Plate").gameObject.SetActive(true);
                     processBar.gameObject.SetActive(false);
 
-                    if (toolBar[selectedSlotIdx].transform.childCount > 0)
+                    if (inventoryManager.holdStuff)
                     {
-                        Destroy(toolBar[selectedSlotIdx].transform.GetChild(0).gameObject);
+                        Destroy(inventoryManager.holding);
+                        inventoryManager.holdStuff = false;
                     }
                 }
 
@@ -671,7 +666,7 @@ public class ObjectsInteractive : MonoBehaviour
 
                 if (currentProcess >= 100)
                 {
-                    Destroy(toolBar[selectedSlotIdx].transform.GetChild(0).gameObject);
+                    Destroy(inventoryManager.holding);
                     currentProcess = -1;
                 }
                 else if (currentProcess >= 0 && currentProcess < 100)

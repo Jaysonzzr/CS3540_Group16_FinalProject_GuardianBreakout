@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MissionManager : MonoBehaviour
 {
+    private InventoryManager inventoryManager;
     public Canvas myCanvas;
     public InventorySlot[] toolBar;
 
@@ -14,7 +15,7 @@ public class MissionManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        inventoryManager = GameObject.Find("LevelManager").GetComponent<InventoryManager>();
     }
 
     // Update is called once per frame
@@ -49,13 +50,9 @@ public class MissionManager : MonoBehaviour
             {
                 GameObject npc = myCanvas.transform.Find("NPCsInventories/" + missions.GetChild(i).name).gameObject;
 
-                foreach (InventorySlot slot in toolBar)
+                if (inventoryManager.Has(npc.transform.Find("MyInventory/MainMission/Requires").GetComponent<MissionRequires>().require))
                 {
-                    if (slot.transform.childCount > 0 &&
-                        slot.transform.GetChild(0).name == npc.transform.Find("MyInventory/MainMission/Requires").GetComponent<MissionRequires>().require)
-                    {
-                        missions.GetChild(i).transform.Find("Finish").gameObject.SetActive(true);
-                    }
+                    missions.GetChild(i).transform.Find("Finish").gameObject.SetActive(true);
                 }
             }
         }

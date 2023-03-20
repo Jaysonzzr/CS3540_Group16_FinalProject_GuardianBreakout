@@ -17,6 +17,9 @@ public class TimeManager : MonoBehaviour
     public AudioClip bellSFX;
     public DateTime currentTime;
 
+    public bool generateFood = false;
+    public bool cellDoorOpen = false;
+
     public enum State
     {
         WakeRoll, Breakfast, MorningFree, Lunch, Job,
@@ -41,6 +44,24 @@ public class TimeManager : MonoBehaviour
         clockText.text = currentTime.ToString("HH:mm");
 
         Schedule();
+
+        if (currentState == State.Breakfast || currentState == State.Lunch || currentState == State.Dinner)
+        {
+            generateFood = true;
+        }
+        else
+        {
+            generateFood = false;
+        }
+
+        if (currentState == State.LightsOut)
+        {
+            cellDoorOpen = false;
+        }
+        else
+        {
+            cellDoorOpen = true;
+        }
     }
 
     void Schedule()

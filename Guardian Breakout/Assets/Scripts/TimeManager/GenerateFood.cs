@@ -15,9 +15,7 @@ public class GenerateFood : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (FindObjectOfType<TimeManager>().currentState == TimeManager.State.Breakfast ||
-            FindObjectOfType<TimeManager>().currentState == TimeManager.State.Lunch ||
-            FindObjectOfType<TimeManager>().currentState == TimeManager.State.Dinner)
+        if (GameObject.Find("LevelManager").GetComponent<TimeManager>().generateFood)
         {
             foreach (InventorySlot slot in foodSlots)
             {
