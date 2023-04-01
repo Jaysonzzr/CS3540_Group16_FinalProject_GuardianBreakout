@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.AI;
 
 public class NPCBehavior : MonoBehaviour
 {
@@ -60,6 +61,11 @@ public class NPCBehavior : MonoBehaviour
     public AudioClip deadSFX1;
     public AudioClip deadSFX2;
 
+    public GameObject levelManager;
+    int currentHour;
+    NavMeshAgent agent;
+    bool workOrNot = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -67,6 +73,7 @@ public class NPCBehavior : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();
+        agent = GetComponent<NavMeshAgent>();
         currentState = NPCStates.Idle;
         // FindNextPoint();
 
@@ -78,6 +85,8 @@ public class NPCBehavior : MonoBehaviour
     {
         distanceToPlayer = Vector3.Distance
             (transform.position, player.transform.position);
+
+        currentHour = levelManager.GetComponent<TimeManager>().currentTime.Hour;
 
         switch(currentState)
         {
@@ -124,11 +133,11 @@ public class NPCBehavior : MonoBehaviour
 
         if (currentState != NPCStates.Sit)
         {
-            controller.enabled = true;
+            //controller.enabled = true;
         }
         else
         {
-            controller.enabled = false;
+            //controller.enabled = false;
         }
 
         if (currentHealth <= 0 && !hasDead)
@@ -144,18 +153,35 @@ public class NPCBehavior : MonoBehaviour
         anim.SetInteger("animState", 0);
         hasDead = false;
         currentHealth = startingHealth;
+        if (currentHour >= 7 && currentHour <23)
+        {
+            if (levelManager.GetComponent<TimeManager>().currentTime.Minute == 0)
+            {
+                currentState = NPCStates.Patrol;
+            }
+        }
     }
 
     void UpdatePatrolState()
     {
+        FindNextPoint();
         anim.SetInteger("animState", 1);
-        /*
-        if (Vector3.Distance(transform.position, nextDestination) < 3)
+
+        agent.stoppingDistance = 0;
+
+        agent.speed = 3f;
+
+        
+        if (Vector3.Distance(transform.position, nextDestination) < 1.5f)
         {
-            FindNextPoint();
+            if(!workOrNot)
+            {
+                currentState = NPCStates.Idle;
+            }
         }
-        */
-        FaceTarget(nextDestination);
+        
+        //FaceTarget(nextDestination);
+        agent.SetDestination(nextDestination);
     }
 
     void UpdateTradeState()
@@ -202,7 +228,7 @@ public class NPCBehavior : MonoBehaviour
         }
         else if (distanceToPlayer > chaseDistance)
         {
-            currentState = NPCStates.Idle;
+            currentState = NPCStates.Patrol;
         }
 
         FaceTarget(player.transform.position);
@@ -274,15 +300,57 @@ public class NPCBehavior : MonoBehaviour
             dying = false;
         }
     }
-    /*
+    
     void FindNextPoint()
     {
-        nextDestination = wanderPoints[currentDestinationIdx].transform.position;
-
-        currentDestinationIdx = (currentDestinationIdx + 1) 
-            % wanderPoints.Length;
+        if (currentHour == 7 || currentHour == 21)
+        {
+            workOrNot = false;
+            //Roll call
+            nextDestination = wanderPoints[0].transform.position;
+        }
+        else if (currentHour == 8 || currentHour == 12 || currentHour == 17)
+        {
+            workOrNot = false;
+            //dinning hall
+            nextDestination = wanderPoints[1].transform.position;
+        }
+        else if ((currentHour >= 9 && currentHour < 12) || (currentHour >= 13 && currentHour < 15) || (currentHour >= 18 && currentHour < 21))
+        {
+            workOrNot = true;
+            //Free time
+            if (nextDestination == wanderPoints[2].transform.position && Vector3.Distance(transform.position, nextDestination) < 1.5f)
+            {
+                nextDestination = wanderPoints[3].transform.position;
+            }
+            else if (nextDestination == wanderPoints[3].transform.position && Vector3.Distance(transform.position, nextDestination) < 1.5f)
+            {
+                nextDestination = wanderPoints[2].transform.position;
+            }
+            else if (nextDestination != wanderPoints[3].transform.position && nextDestination != wanderPoints[2].transform.position)
+            {
+                nextDestination = wanderPoints[2].transform.position;
+            }
+        }
+        else if (currentHour == 15)
+        {
+            workOrNot = false;
+            //Exercise
+            nextDestination = wanderPoints[4].transform.position;
+        }
+        else if (currentHour == 16)
+        {
+            workOrNot = false;
+            //Bath
+            nextDestination = wanderPoints[5].transform.position;
+        }
+        else if (currentHour == 22)
+        {
+            workOrNot = false;
+            nextDestination = wanderPoints[6].transform.position;
+        }
     }
-    */
+    
     void FaceTarget(Vector3 target)
     {
         Vector3 directionToTarget = (target - transform.position).normalized;
