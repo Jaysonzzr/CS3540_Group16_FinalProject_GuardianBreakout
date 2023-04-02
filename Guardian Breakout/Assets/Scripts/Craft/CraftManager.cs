@@ -12,6 +12,8 @@ public class CraftManager : MonoBehaviour
     public Canvas myCanvas;
     public InventorySlot[] inventorySlots;
 
+    public Text itemInfo;
+
     public AudioClip openUISFX;
     public AudioClip closeUISFX;
 
@@ -20,6 +22,7 @@ public class CraftManager : MonoBehaviour
     {
         playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         cameraController = Camera.main.GetComponent<CameraController>();
+        itemInfo = myCanvas.transform.Find("ItemInfo").GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -32,6 +35,7 @@ public class CraftManager : MonoBehaviour
             {
                 obj.SetActive(false);
                 AudioSource.PlayClipAtPoint(closeUISFX, Camera.main.transform.position);
+                itemInfo.text = "";
                 playerController.enabled = true;
                 cameraController.enabled = true;
                 Cursor.lockState = CursorLockMode.Locked;

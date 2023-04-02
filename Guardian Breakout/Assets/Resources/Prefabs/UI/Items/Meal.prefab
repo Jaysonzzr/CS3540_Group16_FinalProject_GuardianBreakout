@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7130869317611081316}
   - component: {fileID: -8134461190649754064}
   m_Layer: 5
-  m_Name: Meal(Clone)
+  m_Name: Meal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
