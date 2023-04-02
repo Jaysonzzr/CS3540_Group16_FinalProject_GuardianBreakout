@@ -66,6 +66,8 @@ public class NPCBehavior : MonoBehaviour
     int currentHour;
     NavMeshAgent agent;
     bool workOrNot = false;
+    public GameObject sitPoint;
+    Vector3 oriPoint;
 
     // Start is called before the first frame update
     void Start()
@@ -156,7 +158,8 @@ public class NPCBehavior : MonoBehaviour
         currentHealth = startingHealth;
         if (currentHour >= 7 && currentHour < 23 && SceneManager.GetActiveScene().name != "Level1")
         {
-            if (levelManager.GetComponent<TimeManager>().currentTime.Minute == 0)
+            FindNextPoint();
+            if (Vector3.Distance(transform.position, nextDestination) > 1.5f)
             {
                 currentState = NPCStates.Patrol;
             }
@@ -177,7 +180,15 @@ public class NPCBehavior : MonoBehaviour
         {
             if(!workOrNot)
             {
-                currentState = NPCStates.Idle;
+                if (currentHour == 7 || currentHour == 15 || currentHour == 16 || currentHour == 21 || currentHour == 22)
+                {
+                    currentState = NPCStates.Idle;
+                }
+                else
+                {
+                    oriPoint = transform.position;
+                    currentState = NPCStates.Sit;
+                }
             }
         }
         
@@ -217,6 +228,21 @@ public class NPCBehavior : MonoBehaviour
     void UpdateSitState()
     {
         anim.SetInteger("animState", 6);
+        GetComponent<CharacterController>().enabled = false;
+        transform.position = sitPoint.transform.position;
+        transform.rotation = sitPoint.transform.rotation;
+        hasDead = false;
+        currentHealth = startingHealth;
+        if (currentHour >= 7 && currentHour < 23 && SceneManager.GetActiveScene().name != "Level1")
+        {
+            FindNextPoint();
+            if (Vector3.Distance(oriPoint, nextDestination) > 1.5f)
+            {
+                transform.position = oriPoint;
+                GetComponent<CharacterController>().enabled = true;
+                currentState = NPCStates.Patrol;
+            }
+        }
     }
 
     void UpdateChaseState()
