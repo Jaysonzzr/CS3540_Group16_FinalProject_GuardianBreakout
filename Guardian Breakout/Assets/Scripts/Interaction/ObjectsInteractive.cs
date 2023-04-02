@@ -14,6 +14,8 @@ public class ObjectsInteractive : MonoBehaviour
     private InventoryManager inventoryManager;
     public float maxDistance = 5.0f; // Maximum distance at which object info will be displayed
 
+    public Text itemInfo;
+
     float currentProcess;
     bool opening = false;
     bool exercising = false;
@@ -54,12 +56,13 @@ public class ObjectsInteractive : MonoBehaviour
 
     public AudioSource washSFX;
 
-    private void Start() 
+    void Start() 
     {
         player = GameObject.FindWithTag("Player");
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         cameraController = Camera.main.GetComponent<CameraController>();
         inventoryManager = GameObject.Find("LevelManager").GetComponent<InventoryManager>();
+        itemInfo = myCanvas.transform.Find("ItemInfo").GetComponent<Text>();
     }
 
     void Update()
@@ -88,6 +91,7 @@ public class ObjectsInteractive : MonoBehaviour
                                 obj.SetActive(false);
                                 infoText.enabled = true;
                                 AudioSource.PlayClipAtPoint(closeInventorySFX, Camera.main.transform.position);
+                                itemInfo.text = "";
                                 playerController.enabled = true;
                                 cameraController.enabled = true;
                                 Cursor.lockState = CursorLockMode.Locked;
@@ -127,6 +131,7 @@ public class ObjectsInteractive : MonoBehaviour
                                 obj.SetActive(false);
                                 infoText.enabled = true;
                                 AudioSource.PlayClipAtPoint(closeInventorySFX, Camera.main.transform.position);
+                                itemInfo.text = "";
                                 playerController.enabled = true;
                                 cameraController.enabled = true;
                                 Cursor.lockState = CursorLockMode.Locked;
@@ -373,6 +378,8 @@ public class ObjectsInteractive : MonoBehaviour
                                     Cursor.lockState = CursorLockMode.Locked;
                                     Cursor.visible = false;
 
+                                    itemInfo.text = "";
+
                                     GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
                                     player.GetComponent<PlayerBehavior>().getHurt = false;
 
@@ -593,7 +600,7 @@ public class ObjectsInteractive : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    currentProcess += 300 * Time.deltaTime;
+                    currentProcess += 800 * Time.deltaTime;
                 }
                 
                 if (currentProcess > 0)
@@ -633,7 +640,7 @@ public class ObjectsInteractive : MonoBehaviour
                         {
                             if (keyCode.ToString() == randomKey)
                             {
-                                currentProcess += 500 * Time.deltaTime;
+                                currentProcess += 1000 * Time.deltaTime;
                                 randomIndex = UnityEngine.Random.Range(0, 4);
                             }
                         }

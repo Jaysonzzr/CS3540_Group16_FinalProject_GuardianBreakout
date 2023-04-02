@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class NPCBehavior : MonoBehaviour
 {
@@ -133,11 +134,11 @@ public class NPCBehavior : MonoBehaviour
 
         if (currentState != NPCStates.Sit)
         {
-            //controller.enabled = true;
+            controller.enabled = true;
         }
         else
         {
-            //controller.enabled = false;
+            controller.enabled = false;
         }
 
         if (currentHealth <= 0 && !hasDead)
@@ -153,7 +154,7 @@ public class NPCBehavior : MonoBehaviour
         anim.SetInteger("animState", 0);
         hasDead = false;
         currentHealth = startingHealth;
-        if (currentHour >= 7 && currentHour <23)
+        if (currentHour >= 7 && currentHour < 23 && SceneManager.GetActiveScene().name != "Level1")
         {
             if (levelManager.GetComponent<TimeManager>().currentTime.Minute == 0)
             {
@@ -228,7 +229,7 @@ public class NPCBehavior : MonoBehaviour
         }
         else if (distanceToPlayer > chaseDistance)
         {
-            currentState = NPCStates.Patrol;
+            currentState = NPCStates.Idle;
         }
 
         FaceTarget(player.transform.position);
