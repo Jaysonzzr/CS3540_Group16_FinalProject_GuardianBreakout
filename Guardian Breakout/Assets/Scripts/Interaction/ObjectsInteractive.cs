@@ -362,7 +362,8 @@ public class ObjectsInteractive : MonoBehaviour
                     {
                         if (hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Hurt &&
                             hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Chase &&
-                            hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Attack)
+                            hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Attack &&
+                            hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Sit)
                         {
                             infoText.text = hitObject.name + " (E)";
                             infoText.color = new Color(255/255f, 255/255f, 255/255f);

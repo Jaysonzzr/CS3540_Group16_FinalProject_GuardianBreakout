@@ -68,6 +68,7 @@ public class NPCBehavior : MonoBehaviour
     bool workOrNot = false;
     public GameObject sitPoint;
     Vector3 oriPoint;
+    public GameObject meal;
 
     // Start is called before the first frame update
     void Start()
@@ -231,6 +232,7 @@ public class NPCBehavior : MonoBehaviour
         GetComponent<CharacterController>().enabled = false;
         transform.position = sitPoint.transform.position;
         transform.rotation = sitPoint.transform.rotation;
+        meal.SetActive(true);
         hasDead = false;
         currentHealth = startingHealth;
         if (currentHour >= 7 && currentHour < 23 && SceneManager.GetActiveScene().name != "Level1")
@@ -240,6 +242,7 @@ public class NPCBehavior : MonoBehaviour
             {
                 transform.position = oriPoint;
                 GetComponent<CharacterController>().enabled = true;
+                meal.SetActive(false);
                 currentState = NPCStates.Patrol;
             }
         }
