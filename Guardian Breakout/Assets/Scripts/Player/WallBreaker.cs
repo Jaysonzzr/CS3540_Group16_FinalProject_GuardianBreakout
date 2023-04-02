@@ -83,20 +83,20 @@ public class WallBreaker : MonoBehaviour
                     // Update the last breakable object
                     lastBreakableObject = hitObject;
                 }
-            }
-            else
-            {
-                if (lastBreakableObject != null)
+                else
                 {
-                    lastBreakableObject.transform.GetComponent<Outline>().enabled = false;
+                    if (lastBreakableObject != null)
+                    {
+                        lastBreakableObject.transform.GetComponent<Outline>().enabled = false;
+                    }
+
+                    waitTime = originalWaitTime;
+                    currentProcess = 0.0f;
+                    processBar.gameObject.SetActive(false);
+
+                    pickaxe.localRotation = Quaternion.Lerp(pickaxe.localRotation, pickaxeRot, Time.deltaTime * 5);
+                    pickaxeAnim.SetInteger("is_attacking", 0);
                 }
-
-                waitTime = originalWaitTime;
-                currentProcess = 0.0f;
-                processBar.gameObject.SetActive(false);
-
-                pickaxe.localRotation = Quaternion.Lerp(pickaxe.localRotation, pickaxeRot, Time.deltaTime * 5);
-                pickaxeAnim.SetInteger("is_attacking", 0);
             }
         }
         else
