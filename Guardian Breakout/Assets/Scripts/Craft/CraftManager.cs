@@ -12,6 +12,9 @@ public class CraftManager : MonoBehaviour
     public Canvas myCanvas;
     public InventorySlot[] inventorySlots;
 
+    public Text itemInfo;
+    public bool crafting = false;
+
     public AudioClip openUISFX;
     public AudioClip closeUISFX;
 
@@ -20,6 +23,7 @@ public class CraftManager : MonoBehaviour
     {
         playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         cameraController = Camera.main.GetComponent<CameraController>();
+        itemInfo = myCanvas.transform.Find("ItemInfo").GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -32,16 +36,19 @@ public class CraftManager : MonoBehaviour
             {
                 obj.SetActive(false);
                 AudioSource.PlayClipAtPoint(closeUISFX, Camera.main.transform.position);
+                itemInfo.text = "";
                 playerController.enabled = true;
                 cameraController.enabled = true;
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
 
+                crafting = false;
+
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
                 GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;
 
                 GameObject tables = myCanvas.transform.Find("CraftTable/Items/Crafts").gameObject;
-                
+
                 for (int i = 0; i < tables.transform.childCount; i++)
                 {
                     if (tables.transform.GetChild(i).gameObject.activeSelf)
@@ -61,6 +68,8 @@ public class CraftManager : MonoBehaviour
                 cameraController.enabled = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+
+                crafting = true;
 
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                 GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;

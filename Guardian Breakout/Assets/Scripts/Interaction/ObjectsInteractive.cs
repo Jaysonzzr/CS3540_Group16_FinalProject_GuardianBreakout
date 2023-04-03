@@ -54,7 +54,7 @@ public class ObjectsInteractive : MonoBehaviour
 
     public AudioSource washSFX;
 
-    private void Start() 
+    private void Start()
     {
         player = GameObject.FindWithTag("Player");
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
@@ -79,7 +79,7 @@ public class ObjectsInteractive : MonoBehaviour
                     if (hitObject.CompareTag("Friendly"))
                     {
                         infoText.text = hitObject.name + " (E)";
-                        infoText.color = new Color(122/255f, 221/255f, 122/255f);
+                        infoText.color = new Color(122 / 255f, 221 / 255f, 122 / 255f);
                         GameObject obj = myCanvas.transform.Find("Inventories/" + hitObject.name.ToString() + "Inventory").gameObject;
                         if (obj.activeSelf)
                         {
@@ -114,11 +114,11 @@ public class ObjectsInteractive : MonoBehaviour
                             }
                         }
                     }
-                    
+
                     if (hitObject.CompareTag("Unfriendly"))
                     {
                         infoText.text = hitObject.name + " (E)";
-                        infoText.color = new Color(222/255f, 77/255f, 77/255f);
+                        infoText.color = new Color(222 / 255f, 77 / 255f, 77 / 255f);
                         GameObject obj = myCanvas.transform.Find("Inventories/" + hitObject.name.ToString() + "Inventory").gameObject;
                         if (obj.activeSelf)
                         {
@@ -194,7 +194,7 @@ public class ObjectsInteractive : MonoBehaviour
                     if (hitObject.CompareTag("BedF") || hitObject.CompareTag("BedB"))
                     {
                         infoText.text = hitObject.name + " (E)";
-                        infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                        infoText.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
                         infoText.enabled = true;
 
                         GameObject cell = hitObject.transform.parent.gameObject;
@@ -205,7 +205,7 @@ public class ObjectsInteractive : MonoBehaviour
                             player.GetComponent<PlayerBehavior>().getHurt = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
-                            
+
                             if (hitObject.CompareTag("BedB"))
                             {
                                 Camera.main.transform.position = new Vector3(
@@ -236,7 +236,7 @@ public class ObjectsInteractive : MonoBehaviour
                     if (hitObject.CompareTag("ShowerF") || hitObject.CompareTag("ShowerB"))
                     {
                         infoText.text = hitObject.name + " (E)";
-                        infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                        infoText.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
                         infoText.enabled = true;
 
                         if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
@@ -247,7 +247,7 @@ public class ObjectsInteractive : MonoBehaviour
                             cameraController.enabled = false;
 
                             washSFX.Play();
-                            
+
                             if (hitObject.CompareTag("ShowerF"))
                             {
                                 Camera.main.transform.position = new Vector3(
@@ -268,11 +268,11 @@ public class ObjectsInteractive : MonoBehaviour
                             }
                             Camera.main.transform.rotation = Quaternion.Euler(
                                 new Vector3(hitObject.transform.rotation.eulerAngles.x,
-                                 hitObject.transform.rotation.eulerAngles.y + 90, 
+                                 hitObject.transform.rotation.eulerAngles.y + 90,
                                  hitObject.transform.rotation.eulerAngles.z
                                 )
                             );
-                            
+
                             locked = true;
                             showering = true;
                             coolDown = 0.1f;
@@ -284,7 +284,7 @@ public class ObjectsInteractive : MonoBehaviour
                     if (hitObject.CompareTag("Exercise"))
                     {
                         infoText.text = hitObject.name + " (E)";
-                        infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                        infoText.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
                         infoText.enabled = true;
 
                         if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
@@ -296,17 +296,17 @@ public class ObjectsInteractive : MonoBehaviour
 
                             AudioClip workoutSFX = UnityEngine.Random.Range(0, 2) == 0 ? workoutSFX1 : workoutSFX2;
                             AudioSource.PlayClipAtPoint(workoutSFX, hitObject.transform.position);
-                            
+
                             Camera.main.transform.position = new Vector3(
                                 hitObject.transform.position.x - 0.75f, hitObject.transform.position.y + 0.6f, hitObject.transform.position.z - 0.048f
                             );
                             Camera.main.transform.rotation = Quaternion.Euler(
                                 new Vector3(hitObject.transform.rotation.eulerAngles.x + 15,
-                                 hitObject.transform.rotation.eulerAngles.y - 90, 
+                                 hitObject.transform.rotation.eulerAngles.y - 90,
                                  hitObject.transform.rotation.eulerAngles.z
                                 )
                             );
-                            
+
                             locked = true;
                             exercising = true;
                             coolDown = 0.1f;
@@ -319,7 +319,7 @@ public class ObjectsInteractive : MonoBehaviour
                     if (hitObject.CompareTag("Read"))
                     {
                         infoText.text = hitObject.name + " (E)";
-                        infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                        infoText.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
                         infoText.enabled = true;
 
                         if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
@@ -328,16 +328,16 @@ public class ObjectsInteractive : MonoBehaviour
                             player.GetComponent<PlayerBehavior>().getHurt = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
-                            
+
                             AudioClip bookSFX = UnityEngine.Random.Range(0, 2) == 0 ? bookSFX1 : bookSFX2;
                             AudioSource.PlayClipAtPoint(bookSFX, hitObject.transform.position);
-                            
+
                             Camera.main.transform.position = new Vector3(
                                 hitObject.transform.position.x - 1.08f, hitObject.transform.position.y + 1.98f, hitObject.transform.position.z - 0.648f
                             );
                             Camera.main.transform.rotation = Quaternion.Euler(
                                 new Vector3(hitObject.transform.rotation.eulerAngles.x + 35,
-                                 hitObject.transform.rotation.eulerAngles.y + 90, 
+                                 hitObject.transform.rotation.eulerAngles.y + 90,
                                  hitObject.transform.rotation.eulerAngles.z
                                 )
                             );
@@ -360,7 +360,7 @@ public class ObjectsInteractive : MonoBehaviour
                             hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Attack)
                         {
                             infoText.text = hitObject.name + " (E)";
-                            infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                            infoText.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
                             GameObject obj = myCanvas.transform.Find("NPCsInventories/" + hitObject.name.ToString()).gameObject;
                             if (obj.activeSelf)
                             {
@@ -402,7 +402,7 @@ public class ObjectsInteractive : MonoBehaviour
                                     player.GetComponent<PlayerBehavior>().getHurt = false;
 
                                     originState = hitObject.GetComponent<NPCBehavior>().currentState;
-                                    
+
                                     if (hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Dead)
                                     {
                                         hitObject.GetComponent<NPCBehavior>().currentState = NPCBehavior.NPCStates.Trade;
@@ -430,7 +430,7 @@ public class ObjectsInteractive : MonoBehaviour
                         else
                         {
                             infoText.text = hitObject.name;
-                            infoText.color = new Color(222/255f, 77/255f, 77/255f);
+                            infoText.color = new Color(222 / 255f, 77 / 255f, 77 / 255f);
                         }
                     }
 
@@ -441,7 +441,7 @@ public class ObjectsInteractive : MonoBehaviour
                         if (inventoryManager.holdStuff && inventoryManager.holding.name == "Meal(Clone)")
                         {
                             infoText.text = hitObject.name + " (E)";
-                            infoText.color = new Color(255/255f, 255/255f, 255/255f);
+                            infoText.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
 
                             if (Input.GetKeyDown(KeyCode.E) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
                             {
@@ -449,13 +449,13 @@ public class ObjectsInteractive : MonoBehaviour
                                 player.GetComponent<PlayerBehavior>().getHurt = false;
                                 playerController.enabled = false;
                                 cameraController.enabled = false;
-                                
+
                                 Camera.main.transform.position = new Vector3(
                                     hitObject.transform.position.x - 1.08f, hitObject.transform.position.y + 1.98f, hitObject.transform.position.z - 0.648f
                                 );
                                 Camera.main.transform.rotation = Quaternion.Euler(
                                     new Vector3(hitObject.transform.rotation.eulerAngles.x + 35,
-                                    hitObject.transform.rotation.eulerAngles.y + 90, 
+                                    hitObject.transform.rotation.eulerAngles.y + 90,
                                     hitObject.transform.rotation.eulerAngles.z
                                     )
                                 );
@@ -470,7 +470,7 @@ public class ObjectsInteractive : MonoBehaviour
                         else
                         {
                             infoText.text = "Go get a plate at the bar first";
-                            infoText.color = new Color(222/255f, 77/255f, 77/255f);
+                            infoText.color = new Color(222 / 255f, 77 / 255f, 77 / 255f);
                         }
                     }
                 }
@@ -515,7 +515,7 @@ public class ObjectsInteractive : MonoBehaviour
         if (locked)
         {
             GameObject.Find("LevelManager").GetComponent<InventoryManager>().lockLootBar = true;
-            
+
             if ((Input.GetKeyDown(KeyCode.E) && coolDown <= 0) || player.GetComponent<PlayerBehavior>().getHurt)
             {
                 GameObject.Find("LevelManager").GetComponent<InventoryManager>().lockLootBar = false;
@@ -595,7 +595,7 @@ public class ObjectsInteractive : MonoBehaviour
                 {
                     currentProcess += 300 * Time.deltaTime;
                 }
-                
+
                 if (currentProcess > 0)
                 {
                     currentProcess -= 5 * Time.deltaTime;
@@ -619,8 +619,8 @@ public class ObjectsInteractive : MonoBehaviour
                 GameObject.FindObjectOfType<PlayerStats>().lockStats = true;
                 myCanvas.transform.Find("PlayerStats").gameObject.SetActive(true);
 
-                string[] keys = {"Q", "B", "Y", "P"};
-                
+                string[] keys = { "Q", "B", "Y", "P" };
+
                 string randomKey = keys[randomIndex];
 
                 readKeyText.text = randomKey;
@@ -639,7 +639,7 @@ public class ObjectsInteractive : MonoBehaviour
                         }
                     }
                 }
-                
+
                 if (currentProcess > 0)
                 {
                     currentProcess -= 5 * Time.deltaTime;
@@ -678,7 +678,7 @@ public class ObjectsInteractive : MonoBehaviour
                     {
                         currentEatingTime = 0.0f;
                         GameObject.FindObjectOfType<PlayerStats>().currentHealth += 4;
-                    }                    
+                    }
                 }
             }
 

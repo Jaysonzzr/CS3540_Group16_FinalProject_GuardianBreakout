@@ -10,7 +10,7 @@ public class DestroyObjects : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -19,7 +19,7 @@ public class DestroyObjects : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider other) 
+    private void OnTriggerEnter(Collider other)
     {
         for (int i = 0; i < toolBar.Length; i++)
         {
