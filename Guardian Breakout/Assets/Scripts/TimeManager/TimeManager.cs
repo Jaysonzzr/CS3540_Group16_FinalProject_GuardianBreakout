@@ -38,7 +38,7 @@ public class TimeManager : MonoBehaviour
     void Update()
     {
         // Increment the current time by 2 minutes for every second that passes in real time
-        currentTime = currentTime.AddMinutes(1.2f * Time.deltaTime);
+        currentTime = currentTime.AddMinutes(1.5f * Time.deltaTime);
 
         // Update the clock text
         clockText.text = currentTime.ToString("HH:mm");

@@ -12,10 +12,7 @@ public class ObjectsInteractive : MonoBehaviour
     private PlayerController playerController;
     private CameraController cameraController;
     private InventoryManager inventoryManager;
-    private CraftManager craftManager;
     public float maxDistance = 5.0f; // Maximum distance at which object info will be displayed
-
-    public Text itemInfo;
 
     float currentProcess;
     public bool opening = false;
@@ -57,27 +54,24 @@ public class ObjectsInteractive : MonoBehaviour
 
     public AudioSource washSFX;
 
-    void Start() 
+    private void Start() 
     {
         player = GameObject.FindWithTag("Player");
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         cameraController = Camera.main.GetComponent<CameraController>();
         inventoryManager = GameObject.Find("LevelManager").GetComponent<InventoryManager>();
-        craftManager = GameObject.Find("LevelManager").GetComponent<CraftManager>();
-        itemInfo = myCanvas.transform.Find("ItemInfo").GetComponent<Text>();
     }
 
     void Update()
     {
-        
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
             GameObject hitObject = hit.transform.gameObject;
-            if ((hitObject.CompareTag("Friendly") || hitObject.CompareTag("Unfriendly") || hitObject.CompareTag("BedF") ||
+            if (hitObject.CompareTag("Friendly") || hitObject.CompareTag("Unfriendly") || hitObject.CompareTag("BedF") ||
                 hitObject.CompareTag("BedB") || hitObject.CompareTag("Exercise") || hitObject.CompareTag("Read") ||
                 hitObject.CompareTag("NPC") || hitObject.CompareTag("Eating") || hitObject.CompareTag("ShowerF") ||
-                hitObject.CompareTag("ShowerB")) && !craftManager.crafting)
+                hitObject.CompareTag("ShowerB"))
             {
                 float distance = Vector3.Distance(transform.position, hitObject.transform.position);
                 if (distance <= maxDistance)
@@ -94,7 +88,6 @@ public class ObjectsInteractive : MonoBehaviour
                                 obj.SetActive(false);
                                 infoText.enabled = true;
                                 AudioSource.PlayClipAtPoint(closeInventorySFX, Camera.main.transform.position);
-                                itemInfo.text = "";
                                 playerController.enabled = true;
                                 cameraController.enabled = true;
                                 Cursor.lockState = CursorLockMode.Locked;
@@ -134,7 +127,6 @@ public class ObjectsInteractive : MonoBehaviour
                                 obj.SetActive(false);
                                 infoText.enabled = true;
                                 AudioSource.PlayClipAtPoint(closeInventorySFX, Camera.main.transform.position);
-                                itemInfo.text = "";
                                 playerController.enabled = true;
                                 cameraController.enabled = true;
                                 Cursor.lockState = CursorLockMode.Locked;
@@ -365,8 +357,7 @@ public class ObjectsInteractive : MonoBehaviour
                     {
                         if (hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Hurt &&
                             hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Chase &&
-                            hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Attack &&
-                            hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Sit)
+                            hitObject.GetComponent<NPCBehavior>().currentState != NPCBehavior.NPCStates.Attack)
                         {
                             infoText.text = hitObject.name + " (E)";
                             infoText.color = new Color(255/255f, 255/255f, 255/255f);
@@ -381,8 +372,6 @@ public class ObjectsInteractive : MonoBehaviour
                                     cameraController.enabled = true;
                                     Cursor.lockState = CursorLockMode.Locked;
                                     Cursor.visible = false;
-
-                                    itemInfo.text = "";
 
                                     GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
                                     player.GetComponent<PlayerBehavior>().getHurt = false;
@@ -604,7 +593,7 @@ public class ObjectsInteractive : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    currentProcess += 800 * Time.deltaTime;
+                    currentProcess += 300 * Time.deltaTime;
                 }
                 
                 if (currentProcess > 0)
@@ -644,7 +633,7 @@ public class ObjectsInteractive : MonoBehaviour
                         {
                             if (keyCode.ToString() == randomKey)
                             {
-                                currentProcess += 1000 * Time.deltaTime;
+                                currentProcess += 500 * Time.deltaTime;
                                 randomIndex = UnityEngine.Random.Range(0, 4);
                             }
                         }

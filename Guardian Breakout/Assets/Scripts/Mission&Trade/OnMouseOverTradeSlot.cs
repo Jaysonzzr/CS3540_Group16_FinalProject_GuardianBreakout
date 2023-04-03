@@ -27,7 +27,7 @@ public class OnMouseOverTradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
     {
         image = GetComponent<Image>();
         infoImage = transform.parent.parent.transform.Find("MainMission/Costs/" + transform.name).gameObject;
-        cost = int.Parse(infoImage.transform.GetChild(0).name);
+        cost = int.Parse(infoImage.transform.GetChild(1).name);
     }
 
     void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
