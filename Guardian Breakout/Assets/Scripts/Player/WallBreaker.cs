@@ -23,6 +23,15 @@ public class WallBreaker : MonoBehaviour
     // Add a variable to store the last breakable object
     private GameObject lastBreakableObject;
 
+    Transform pickaxe;
+    Animator pickaxeAnim;
+    Quaternion pickaxeRot;
+
+    bool breaking = false;
+
+    // Add a variable to store the last breakable object
+    private GameObject lastBreakableObject;
+
     void Start()
     {
         originalWaitTime = waitTime;

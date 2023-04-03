@@ -77,7 +77,7 @@ public class Level1Manager : MonoBehaviour
         getUpText = transform.Find("GetUpText").GetComponent<Text>();
         getUpCover = transform.Find("GetUpCover").GetComponent<Image>();
         GameInit();
-        
+
         startColor = getUpCover.color;
     }
 

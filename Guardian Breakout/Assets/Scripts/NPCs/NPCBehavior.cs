@@ -81,7 +81,6 @@ public class NPCBehavior : MonoBehaviour
         anim = GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();
         agent = GetComponent<NavMeshAgent>();
-        
         currentState = NPCStates.Idle;
         // FindNextPoint();
 
@@ -187,7 +186,6 @@ public class NPCBehavior : MonoBehaviour
         agent.stoppingDistance = 0;
 
         agent.speed = 3f;
-
         
         if (Vector3.Distance(transform.position, nextDestination) < 1.5f)
         {
@@ -204,7 +202,7 @@ public class NPCBehavior : MonoBehaviour
                 }
             }
         }
-        
+
         //FaceTarget(nextDestination);
         agent.SetDestination(nextDestination);
     }
@@ -228,7 +226,7 @@ public class NPCBehavior : MonoBehaviour
             // Apply move direction with a certain speed
             controller.SimpleMove(moveDirection.normalized * bounceBackSpeed);
         }
-        
+
         hurtTime += Time.deltaTime;
         if (hurtTime > animDuration)
         {
@@ -326,7 +324,7 @@ public class NPCBehavior : MonoBehaviour
             Vector3 viewportPos = Camera.main.WorldToViewportPoint(gameObject.transform.position);
 
             // Check if the game object is outside the camera view.
-            if (viewportPos.x < 0 || viewportPos.x > 1 || viewportPos.y < 0 || viewportPos.y > 1) 
+            if (viewportPos.x < 0 || viewportPos.x > 1 || viewportPos.y < 0 || viewportPos.y > 1)
             {
                 // transform.position = new Vector3(0, 0, 0);
                 currentState = NPCStates.Idle;
@@ -342,7 +340,7 @@ public class NPCBehavior : MonoBehaviour
             dying = false;
         }
     }
-    
+
     void FindNextPoint()
     {
         if (currentHour == 7 || currentHour == 21)
@@ -392,7 +390,7 @@ public class NPCBehavior : MonoBehaviour
             nextDestination = wanderPoints[6].transform.position;
         }
     }
-    
+
     void FaceTarget(Vector3 target)
     {
         Vector3 directionToTarget = (target - transform.position).normalized;
@@ -409,7 +407,7 @@ public class NPCBehavior : MonoBehaviour
         bounceBackEndTime = Time.time + bounceBackDuration;
     }
 
-    private void OnTriggerEnter(Collider other) 
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("PlayerDamageBox") && currentState != NPCStates.Dead)
         {
@@ -454,5 +452,5 @@ public class NPCBehavior : MonoBehaviour
         Debug.DrawLine(enemyEyes.position, frontRayPoint, Color.cyan);
         Debug.DrawLine(enemyEyes.position, leftRayPoint, Color.yellow);
         Debug.DrawLine(enemyEyes.position, rightRayPoint, Color.yellow);
-}
+    }
 }
