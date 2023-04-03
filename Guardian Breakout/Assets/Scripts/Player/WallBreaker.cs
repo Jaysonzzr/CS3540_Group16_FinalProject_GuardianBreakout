@@ -13,6 +13,15 @@ public class WallBreaker : MonoBehaviour
     float currentProcess;
 
     public InventoryManager inventoryManager;
+    
+    Transform pickaxe;
+    Animator pickaxeAnim;
+    Quaternion pickaxeRot;
+
+    bool breaking = false;
+
+    // Add a variable to store the last breakable object
+    private GameObject lastBreakableObject;
 
     Transform pickaxe;
     Animator pickaxeAnim;
@@ -89,7 +98,7 @@ public class WallBreaker : MonoBehaviour
                 }
             }
             else
-            {
+            {            
                 if (lastBreakableObject != null)
                 {
                     lastBreakableObject.transform.GetComponent<Outline>().enabled = false;
@@ -103,9 +112,9 @@ public class WallBreaker : MonoBehaviour
                     processBar.gameObject.SetActive(false);
                     breaking = false;
                 }
-
+                
                 pickaxe.localRotation = Quaternion.Lerp(pickaxe.localRotation, pickaxeRot, Time.deltaTime * 5);
-                pickaxeAnim.SetInteger("is_attacking", 0);
+                pickaxeAnim.SetInteger("is_attacking", 0);    
             }
         }
     }

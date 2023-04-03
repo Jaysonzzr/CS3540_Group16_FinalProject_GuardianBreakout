@@ -81,7 +81,6 @@ public class NPCBehavior : MonoBehaviour
         anim = GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();
         agent = GetComponent<NavMeshAgent>();
-
         currentState = NPCStates.Idle;
         // FindNextPoint();
 
@@ -98,15 +97,13 @@ public class NPCBehavior : MonoBehaviour
         currentHour = levelManager.GetComponent<TimeManager>().currentTime.Hour;
         Debug.Log(ObjectStats);
 
-        if (ObjectStats)
-        {
-            if (IsPlayerInClearFOV())
-            {
+        if(ObjectStats){
+            if(IsPlayerInClearFOV()){
                 currentState = NPCStates.Chase;
             }
         }
-
-        switch (currentState)
+        
+        switch(currentState)
         {
             case NPCStates.Idle:
                 UpdateIdleState();
@@ -189,11 +186,10 @@ public class NPCBehavior : MonoBehaviour
         agent.stoppingDistance = 0;
 
         agent.speed = 3f;
-
-
+        
         if (Vector3.Distance(transform.position, nextDestination) < 1.5f)
         {
-            if (!workOrNot)
+            if(!workOrNot)
             {
                 if (currentHour == 7 || currentHour == 15 || currentHour == 16 || currentHour == 21 || currentHour == 22)
                 {
