@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class NPCBehavior : MonoBehaviour
 {
@@ -17,9 +19,11 @@ public class NPCBehavior : MonoBehaviour
         Dead,
         Trade
     }
-
+    public Transform enemyEyes;
     public NPCStates currentState;
 
+    public GameObject script;
+    public float fieldOfView = 45f;
     public float startingHealth;
     public float currentHealth;
 
@@ -52,6 +56,7 @@ public class NPCBehavior : MonoBehaviour
 
     public bool getHurt = false;
     bool hasDead;
+    bool ObjectStats;
     float hurtTime = 0;
 
     public AudioClip hurtSFX1;
@@ -60,6 +65,14 @@ public class NPCBehavior : MonoBehaviour
     public AudioClip deadSFX1;
     public AudioClip deadSFX2;
 
+    public GameObject levelManager;
+    int currentHour;
+    NavMeshAgent agent;
+    bool workOrNot = false;
+    public GameObject sitPoint;
+    Vector3 oriPoint;
+    public GameObject meal;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -67,6 +80,8 @@ public class NPCBehavior : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();
+        agent = GetComponent<NavMeshAgent>();
+        
         currentState = NPCStates.Idle;
         // FindNextPoint();
 
@@ -79,6 +94,16 @@ public class NPCBehavior : MonoBehaviour
         distanceToPlayer = Vector3.Distance
             (transform.position, player.transform.position);
 
+        ObjectStats = script.GetComponent<ObjectsInteractive>().opening;
+        currentHour = levelManager.GetComponent<TimeManager>().currentTime.Hour;
+        Debug.Log(ObjectStats);
+
+        if(ObjectStats){
+            if(IsPlayerInClearFOV()){
+                currentState = NPCStates.Chase;
+            }
+        }
+        
         switch(currentState)
         {
             case NPCStates.Idle:
@@ -144,18 +169,44 @@ public class NPCBehavior : MonoBehaviour
         anim.SetInteger("animState", 0);
         hasDead = false;
         currentHealth = startingHealth;
+        if (currentHour >= 7 && currentHour < 23 && SceneManager.GetActiveScene().name != "Level1")
+        {
+            FindNextPoint();
+            if (Vector3.Distance(transform.position, nextDestination) > 1.5f)
+            {
+                currentState = NPCStates.Patrol;
+            }
+        }
     }
 
     void UpdatePatrolState()
     {
+        FindNextPoint();
         anim.SetInteger("animState", 1);
-        /*
-        if (Vector3.Distance(transform.position, nextDestination) < 3)
+
+        agent.stoppingDistance = 0;
+
+        agent.speed = 3f;
+
+        
+        if (Vector3.Distance(transform.position, nextDestination) < 1.5f)
         {
-            FindNextPoint();
+            if(!workOrNot)
+            {
+                if (currentHour == 7 || currentHour == 15 || currentHour == 16 || currentHour == 21 || currentHour == 22)
+                {
+                    currentState = NPCStates.Idle;
+                }
+                else
+                {
+                    oriPoint = transform.position;
+                    currentState = NPCStates.Sit;
+                }
+            }
         }
-        */
-        FaceTarget(nextDestination);
+        
+        //FaceTarget(nextDestination);
+        agent.SetDestination(nextDestination);
     }
 
     void UpdateTradeState()
@@ -190,6 +241,23 @@ public class NPCBehavior : MonoBehaviour
     void UpdateSitState()
     {
         anim.SetInteger("animState", 6);
+        GetComponent<CharacterController>().enabled = false;
+        transform.position = sitPoint.transform.position;
+        transform.rotation = sitPoint.transform.rotation;
+        meal.SetActive(true);
+        hasDead = false;
+        currentHealth = startingHealth;
+        if (currentHour >= 7 && currentHour < 23 && SceneManager.GetActiveScene().name != "Level1")
+        {
+            FindNextPoint();
+            if (Vector3.Distance(oriPoint, nextDestination) > 1.5f)
+            {
+                transform.position = oriPoint;
+                GetComponent<CharacterController>().enabled = true;
+                meal.SetActive(false);
+                currentState = NPCStates.Patrol;
+            }
+        }
     }
 
     void UpdateChaseState()
@@ -274,15 +342,57 @@ public class NPCBehavior : MonoBehaviour
             dying = false;
         }
     }
-    /*
+    
     void FindNextPoint()
     {
-        nextDestination = wanderPoints[currentDestinationIdx].transform.position;
-
-        currentDestinationIdx = (currentDestinationIdx + 1) 
-            % wanderPoints.Length;
+        if (currentHour == 7 || currentHour == 21)
+        {
+            workOrNot = false;
+            //Roll call
+            nextDestination = wanderPoints[0].transform.position;
+        }
+        else if (currentHour == 8 || currentHour == 12 || currentHour == 17)
+        {
+            workOrNot = false;
+            //dinning hall
+            nextDestination = wanderPoints[1].transform.position;
+        }
+        else if ((currentHour >= 9 && currentHour < 12) || (currentHour >= 13 && currentHour < 15) || (currentHour >= 18 && currentHour < 21))
+        {
+            workOrNot = true;
+            //Free time
+            if (nextDestination == wanderPoints[2].transform.position && Vector3.Distance(transform.position, nextDestination) < 1.5f)
+            {
+                nextDestination = wanderPoints[3].transform.position;
+            }
+            else if (nextDestination == wanderPoints[3].transform.position && Vector3.Distance(transform.position, nextDestination) < 1.5f)
+            {
+                nextDestination = wanderPoints[2].transform.position;
+            }
+            else if (nextDestination != wanderPoints[3].transform.position && nextDestination != wanderPoints[2].transform.position)
+            {
+                nextDestination = wanderPoints[2].transform.position;
+            }
+        }
+        else if (currentHour == 15)
+        {
+            workOrNot = false;
+            //Exercise
+            nextDestination = wanderPoints[4].transform.position;
+        }
+        else if (currentHour == 16)
+        {
+            workOrNot = false;
+            //Bath
+            nextDestination = wanderPoints[5].transform.position;
+        }
+        else if (currentHour == 22)
+        {
+            workOrNot = false;
+            nextDestination = wanderPoints[6].transform.position;
+        }
     }
-    */
+    
     void FaceTarget(Vector3 target)
     {
         Vector3 directionToTarget = (target - transform.position).normalized;
@@ -308,4 +418,41 @@ public class NPCBehavior : MonoBehaviour
             other.enabled = false;
         }
     }
+
+    bool IsPlayerInClearFOV()
+    {
+        Vector3 directionToPlayer = player.transform.position - enemyEyes.position;
+
+        RaycastHit hit;
+        if (Vector3.Angle(directionToPlayer, enemyEyes.forward) <= fieldOfView)
+        {
+            if (Physics.Raycast(enemyEyes.position, directionToPlayer, out hit, chaseDistance))
+            {
+                if (hit.collider.CompareTag("Player"))
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        //Gizmos.DrawWireSphere(transform.position, attackDistance);
+
+        Gizmos.color = Color.green;
+        //Gizmos.DrawWireSphere(transform.position, chaseDistance);
+
+        Vector3 frontRayPoint = enemyEyes.position + (enemyEyes.forward * chaseDistance);
+        Vector3 leftRayPoint = Quaternion.Euler(0, fieldOfView * 0.5f, 0) * frontRayPoint;
+        Vector3 rightRayPoint = Quaternion.Euler(0, -fieldOfView * 0.5f, 0) * frontRayPoint;
+
+        Debug.DrawLine(enemyEyes.position, frontRayPoint, Color.cyan);
+        Debug.DrawLine(enemyEyes.position, leftRayPoint, Color.yellow);
+        Debug.DrawLine(enemyEyes.position, rightRayPoint, Color.yellow);
+}
 }

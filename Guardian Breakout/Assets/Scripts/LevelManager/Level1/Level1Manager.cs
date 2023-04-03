@@ -9,7 +9,7 @@ public class Level1Manager : MonoBehaviour
     private CharacterController characterController;
     private PlayerController playerController;
     private CameraController cameraController;
-    public InventoryManager inventoryManager;
+    private InventoryManager inventoryManager;
 
     private Text getUpText;
     private GameObject tutorialHints;
@@ -222,6 +222,12 @@ public class Level1Manager : MonoBehaviour
 
         if (combat)
         {
+            foreach (GameObject door in doors)
+            {
+                door.tag = "Untagged";
+                door.transform.localRotation = Quaternion.Euler(0, 90, 0);
+            }
+
             jess.GetComponent<CharacterController>().enabled = false;
             jess.transform.position = new Vector3(-12f, -0.05000004f, 29f);
             jess.GetComponent<NPCBehavior>().currentState = NPCBehavior.NPCStates.Chase;
@@ -251,6 +257,12 @@ public class Level1Manager : MonoBehaviour
 
         if (hasDead)
         {
+            foreach (GameObject door in doors)
+            {
+                door.tag = "CellDoor";
+                door.transform.localRotation = Quaternion.Euler(0, 90, 0);
+            }
+
             tutorialHints.transform.Find("Hints/TitleText").GetComponent<Text>().text = "Passed Out";
             tutorialHints.transform.Find("Hints/MainText").GetComponent<Text>().text = deadText;
             PauseGame(tutorialHints);
