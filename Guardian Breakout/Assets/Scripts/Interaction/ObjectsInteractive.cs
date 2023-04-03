@@ -18,7 +18,7 @@ public class ObjectsInteractive : MonoBehaviour
     public Text itemInfo;
 
     float currentProcess;
-    bool opening = false;
+    public bool opening = false;
     bool exercising = false;
     public Text exerciseText;
 
@@ -69,6 +69,7 @@ public class ObjectsInteractive : MonoBehaviour
 
     void Update()
     {
+        
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {

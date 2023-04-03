@@ -19,9 +19,11 @@ public class NPCBehavior : MonoBehaviour
         Dead,
         Trade
     }
-
+    public Transform enemyEyes;
     public NPCStates currentState;
 
+    public GameObject script;
+    public float fieldOfView = 45f;
     public float startingHealth;
     public float currentHealth;
 
@@ -54,6 +56,7 @@ public class NPCBehavior : MonoBehaviour
 
     public bool getHurt = false;
     bool hasDead;
+    bool ObjectStats;
     float hurtTime = 0;
 
     public AudioClip hurtSFX1;
@@ -78,6 +81,7 @@ public class NPCBehavior : MonoBehaviour
         anim = GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();
         agent = GetComponent<NavMeshAgent>();
+        
         currentState = NPCStates.Idle;
         // FindNextPoint();
 
@@ -90,8 +94,16 @@ public class NPCBehavior : MonoBehaviour
         distanceToPlayer = Vector3.Distance
             (transform.position, player.transform.position);
 
+        ObjectStats = script.GetComponent<ObjectsInteractive>().opening;
         currentHour = levelManager.GetComponent<TimeManager>().currentTime.Hour;
+        Debug.Log(ObjectStats);
 
+        if(ObjectStats){
+            if(IsPlayerInClearFOV()){
+                currentState = NPCStates.Chase;
+            }
+        }
+        
         switch(currentState)
         {
             case NPCStates.Idle:
@@ -406,4 +418,41 @@ public class NPCBehavior : MonoBehaviour
             other.enabled = false;
         }
     }
+
+    bool IsPlayerInClearFOV()
+    {
+        Vector3 directionToPlayer = player.transform.position - enemyEyes.position;
+
+        RaycastHit hit;
+        if (Vector3.Angle(directionToPlayer, enemyEyes.forward) <= fieldOfView)
+        {
+            if (Physics.Raycast(enemyEyes.position, directionToPlayer, out hit, chaseDistance))
+            {
+                if (hit.collider.CompareTag("Player"))
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        //Gizmos.DrawWireSphere(transform.position, attackDistance);
+
+        Gizmos.color = Color.green;
+        //Gizmos.DrawWireSphere(transform.position, chaseDistance);
+
+        Vector3 frontRayPoint = enemyEyes.position + (enemyEyes.forward * chaseDistance);
+        Vector3 leftRayPoint = Quaternion.Euler(0, fieldOfView * 0.5f, 0) * frontRayPoint;
+        Vector3 rightRayPoint = Quaternion.Euler(0, -fieldOfView * 0.5f, 0) * frontRayPoint;
+
+        Debug.DrawLine(enemyEyes.position, frontRayPoint, Color.cyan);
+        Debug.DrawLine(enemyEyes.position, leftRayPoint, Color.yellow);
+        Debug.DrawLine(enemyEyes.position, rightRayPoint, Color.yellow);
+}
 }
