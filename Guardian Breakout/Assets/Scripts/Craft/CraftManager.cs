@@ -13,6 +13,7 @@ public class CraftManager : MonoBehaviour
     public InventorySlot[] inventorySlots;
 
     public Text itemInfo;
+    public bool crafting = false;
 
     public AudioClip openUISFX;
     public AudioClip closeUISFX;
@@ -41,6 +42,8 @@ public class CraftManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
 
+                crafting = false;
+
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
                 GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;
 
@@ -65,6 +68,8 @@ public class CraftManager : MonoBehaviour
                 cameraController.enabled = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+
+                crafting = true;
 
                 GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
                 GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;

@@ -12,6 +12,7 @@ public class ObjectsInteractive : MonoBehaviour
     private PlayerController playerController;
     private CameraController cameraController;
     private InventoryManager inventoryManager;
+    private CraftManager craftManager;
     public float maxDistance = 5.0f; // Maximum distance at which object info will be displayed
 
     public Text itemInfo;
@@ -62,6 +63,7 @@ public class ObjectsInteractive : MonoBehaviour
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         cameraController = Camera.main.GetComponent<CameraController>();
         inventoryManager = GameObject.Find("LevelManager").GetComponent<InventoryManager>();
+        craftManager = GameObject.Find("LevelManager").GetComponent<CraftManager>();
         itemInfo = myCanvas.transform.Find("ItemInfo").GetComponent<Text>();
     }
 
@@ -71,10 +73,10 @@ public class ObjectsInteractive : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
             GameObject hitObject = hit.transform.gameObject;
-            if (hitObject.CompareTag("Friendly") || hitObject.CompareTag("Unfriendly") || hitObject.CompareTag("BedF") ||
+            if ((hitObject.CompareTag("Friendly") || hitObject.CompareTag("Unfriendly") || hitObject.CompareTag("BedF") ||
                 hitObject.CompareTag("BedB") || hitObject.CompareTag("Exercise") || hitObject.CompareTag("Read") ||
                 hitObject.CompareTag("NPC") || hitObject.CompareTag("Eating") || hitObject.CompareTag("ShowerF") ||
-                hitObject.CompareTag("ShowerB"))
+                hitObject.CompareTag("ShowerB")) && !craftManager.crafting)
             {
                 float distance = Vector3.Distance(transform.position, hitObject.transform.position);
                 if (distance <= maxDistance)

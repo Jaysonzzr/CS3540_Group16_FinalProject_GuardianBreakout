@@ -18,6 +18,8 @@ public class WallBreaker : MonoBehaviour
     Animator pickaxeAnim;
     Quaternion pickaxeRot;
 
+    bool breaking = false;
+
     // Add a variable to store the last breakable object
     private GameObject lastBreakableObject;
 
@@ -35,12 +37,12 @@ public class WallBreaker : MonoBehaviour
     void Update()
     {
         processBar.value = currentProcess;
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, maxDistance))
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit))
         {
             GameObject hitObject = hit.transform.gameObject;
-            if (hitObject.CompareTag("Breakable"))
+            if (hitObject.CompareTag("Breakable") && hit.distance <= maxDistance)
             {
-                if (inventoryManager.holdStuff && inventoryManager.holding.name == "Pickaxe")
+                if (inventoryManager.holdStuff && (inventoryManager.holding.name == "Pickaxe" || inventoryManager.holding.name == "Pickaxe(Clone)"))
                 {
                     // If the breakable object changed, reset the process
                     if (lastBreakableObject != null && lastBreakableObject != hitObject)
@@ -56,6 +58,8 @@ public class WallBreaker : MonoBehaviour
                         hitObject.GetComponent<Outline>().enabled = true;
                         currentProcess = (1 - waitTime / originalWaitTime) * 100;
                         processBar.gameObject.SetActive(true);
+
+                        breaking = true;
 
                         pickaxeAnim.SetInteger("is_attacking", 1);
                     }
@@ -83,25 +87,26 @@ public class WallBreaker : MonoBehaviour
                     // Update the last breakable object
                     lastBreakableObject = hitObject;
                 }
-                else
-                {
-                    if (lastBreakableObject != null)
-                    {
-                        lastBreakableObject.transform.GetComponent<Outline>().enabled = false;
-                    }
-
-                    waitTime = originalWaitTime;
-                    currentProcess = 0.0f;
-                    processBar.gameObject.SetActive(false);
-
-                    pickaxe.localRotation = Quaternion.Lerp(pickaxe.localRotation, pickaxeRot, Time.deltaTime * 5);
-                    pickaxeAnim.SetInteger("is_attacking", 0);
-                }
             }
-        }
-        else
-        {
-            processBar.gameObject.SetActive(false);
+            else
+            {            
+                if (lastBreakableObject != null)
+                {
+                    lastBreakableObject.transform.GetComponent<Outline>().enabled = false;
+                }
+
+                waitTime = originalWaitTime;
+                currentProcess = 0.0f;
+
+                if (breaking)
+                {
+                    processBar.gameObject.SetActive(false);
+                    breaking = false;
+                }
+                
+                pickaxe.localRotation = Quaternion.Lerp(pickaxe.localRotation, pickaxeRot, Time.deltaTime * 5);
+                pickaxeAnim.SetInteger("is_attacking", 0);    
+            }
         }
     }
 }
