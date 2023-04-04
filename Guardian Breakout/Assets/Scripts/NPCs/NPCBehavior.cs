@@ -96,7 +96,6 @@ public class NPCBehavior : MonoBehaviour
 
         ObjectStats = script.GetComponent<ObjectsInteractive>().opening;
         currentHour = levelManager.GetComponent<TimeManager>().currentTime.Hour;
-        Debug.Log(ObjectStats);
 
         if (ObjectStats)
         {

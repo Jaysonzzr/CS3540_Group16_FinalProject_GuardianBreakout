@@ -43,7 +43,7 @@ public class GuardBehavior : MonoBehaviour
     float attackTime = 0;
     float currentDuration = 0;
 
-    public float bounceBackSpeed = 15f;
+    public float bounceBackSpeed = 0.1f;
     public float bounceBackDuration = 0.5f;
 
     private float bounceBackEndTime = 0f;
@@ -108,6 +108,37 @@ public class GuardBehavior : MonoBehaviour
                 UpdateAlertState();
                 break;
         }
+
+        if (getHurt)
+        {
+            AudioClip hurtSFX = UnityEngine.Random.Range(0, 2) == 0 ? hurtSFX1 : hurtSFX2;
+            AudioSource.PlayClipAtPoint(hurtSFX, transform.position);
+
+            TakeDamage();
+            currentState = NPCStates.Hurt;
+            hurtTime = 0.0f;
+            getHurt = false;
+        }
+        if (currentState != NPCStates.Attack)
+        {
+            damageBox.enabled = false;
+        }
+
+        if (currentState != NPCStates.Sit)
+        {
+            controller.enabled = true;
+        }
+        else
+        {
+            controller.enabled = false;
+        }
+
+        if (currentHealth <= 0 && !hasDead)
+        {
+            dying = true;
+            hasDead = true;
+            currentState = NPCStates.Dead;
+        }
     }
 
     void UpdateIdleState()
@@ -128,7 +159,7 @@ public class GuardBehavior : MonoBehaviour
         
         FaceTarget(nextDestination);
 
-        if (distanceToPlayer < chaseDistance)
+        if (distanceToPlayer < chaseDistance && IsPlayerInClearFOV())
         {
             currentState = NPCStates.Alert;
             FaceTarget(player.transform.position);
@@ -141,11 +172,6 @@ public class GuardBehavior : MonoBehaviour
     }
 
     void UpdateHurtState()
-    {
-
-    }
-
-    void UpdateChaseState()
     {
         anim.SetInteger("animState", 7);
         var animDuration = anim.GetCurrentAnimatorStateInfo(0).length;
@@ -160,9 +186,25 @@ public class GuardBehavior : MonoBehaviour
         }
 
         hurtTime += Time.deltaTime;
-        if (hurtTime > animDuration || distanceToPlayer < attackDistance)
+        if (hurtTime > animDuration)
         {
             currentState = NPCStates.Attack;
+        }
+
+        FaceTarget(player.transform.position);
+    }
+
+    void UpdateChaseState()
+    {
+        anim.SetInteger("animState", 2);
+
+        if (distanceToPlayer <= attackDistance)
+        {
+            currentState = NPCStates.Attack;
+        }
+        else if (distanceToPlayer > chaseDistance * 2)
+        {
+            currentState = NPCStates.Patrol;
         }
 
         FaceTarget(player.transform.position);
@@ -239,15 +281,20 @@ public class GuardBehavior : MonoBehaviour
     {
         anim.SetInteger("animState", 6);
 
-        Level1Manager levelManager = GetComponent<Level1Manager>();
+        var animDuration = anim.GetCurrentAnimatorStateInfo(0).length;
+        Level1Manager levelManager = FindObjectOfType<Level1Manager>();
         ObjectsInteractive objectsInteractive = Camera.main.GetComponent<ObjectsInteractive>();
 
-        if (levelManager.inventoryManager.holdStuff && levelManager.inventoryManager.holding.name == "Pickaxe" && IsPlayerInClearFOV())
+        Debug.Log(levelManager.inventoryManager);
+
+        if (levelManager.inventoryManager.holdStuff && (levelManager.inventoryManager.holding != null && levelManager.inventoryManager.holding.name == "Pickaxe") 
+            && IsPlayerInClearFOV())
         {
             currentState = NPCStates.Chase;
         } 
         else if (distanceToPlayer > chaseDistance && IsPlayerInClearFOV())
         {
+            Debug.Log("back to normal");
             currentState = NPCStates.Patrol;
         }
         else if (objectsInteractive.opening && IsPlayerInClearFOV())
@@ -255,6 +302,7 @@ public class GuardBehavior : MonoBehaviour
             currentState = NPCStates.Chase;
         }
 
+        Debug.Log("Distance to player:" + distanceToPlayer + ", " + chaseDistance);
         FaceTarget(player.transform.position);
     }
 
@@ -288,6 +336,7 @@ public class GuardBehavior : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 directionToPlayer = player.transform.position - enemyEyes.position;
+        Debug.Log(directionToPlayer);
 
         if (Vector3.Angle(directionToPlayer, enemyEyes.forward) <= fieldOfView)
         {
