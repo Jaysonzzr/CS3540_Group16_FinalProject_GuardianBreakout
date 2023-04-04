@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GuardBehavior : MonoBehaviour
 {
+    InventoryManager inventoryManager;
+
     public enum NPCStates
     {
         Idle,
@@ -64,6 +66,7 @@ public class GuardBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        inventoryManager = GameObject.Find("LevelManager").GetComponent<InventoryManager>();
         player = GameObject.FindWithTag("Player");
         wanderPoints = GameObject.FindGameObjectsWithTag("guardWanderpoint");
         controller = GetComponent<CharacterController>();
@@ -282,16 +285,15 @@ public class GuardBehavior : MonoBehaviour
         anim.SetInteger("animState", 6);
 
         var animDuration = anim.GetCurrentAnimatorStateInfo(0).length;
-        Level1Manager levelManager = FindObjectOfType<Level1Manager>();
         ObjectsInteractive objectsInteractive = Camera.main.GetComponent<ObjectsInteractive>();
 
-        Debug.Log(levelManager.inventoryManager);
-
-        if (levelManager.inventoryManager.holdStuff && (levelManager.inventoryManager.holding != null && levelManager.inventoryManager.holding.name == "Pickaxe") 
-            && IsPlayerInClearFOV())
+        // Will be modified from item name to tag
+        if (inventoryManager.holdStuff && (inventoryManager.holding != null && 
+            (inventoryManager.holding.name == "Pickaxe" || inventoryManager.holding.name == "Crowbar")) &&
+            IsPlayerInClearFOV())
         {
             currentState = NPCStates.Chase;
-        } 
+        }
         else if (distanceToPlayer > chaseDistance && IsPlayerInClearFOV())
         {
             Debug.Log("back to normal");
