@@ -21,6 +21,7 @@ TagManager:
   - NPCDamageBox
   - Guard
   - Win
+  - guardWanderpoint
   layers:
   - Default
   - TransparentFX

@@ -65,7 +65,7 @@ public class GuardBehavior : MonoBehaviour
     void Start()
     {
         player = GameObject.FindWithTag("Player");
-        wanderPoints = GameObject.FindGameObjectsWithTag("wanderpoint");
+        wanderPoints = GameObject.FindGameObjectsWithTag("guardWanderpoint");
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();

@@ -8,8 +8,6 @@ public class LevelManager : MonoBehaviour
 {
     public Text gameText;
 
-    public AudioClip winSFX;
-
     public static bool isGameOver = false;
 
     public string nextLevel;
