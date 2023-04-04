@@ -48,7 +48,7 @@ public class CraftManager : MonoBehaviour
                 GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;
 
                 GameObject tables = myCanvas.transform.Find("CraftTable/Items/Crafts").gameObject;
-                
+
                 for (int i = 0; i < tables.transform.childCount; i++)
                 {
                     if (tables.transform.GetChild(i).gameObject.activeSelf)

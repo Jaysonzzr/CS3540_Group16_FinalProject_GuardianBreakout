@@ -9,7 +9,7 @@ public class Level1Manager : MonoBehaviour
     private CharacterController characterController;
     private PlayerController playerController;
     private CameraController cameraController;
-    private InventoryManager inventoryManager;
+    public InventoryManager inventoryManager;
 
     private Text getUpText;
     private GameObject tutorialHints;
@@ -77,7 +77,7 @@ public class Level1Manager : MonoBehaviour
         getUpText = transform.Find("GetUpText").GetComponent<Text>();
         getUpCover = transform.Find("GetUpCover").GetComponent<Image>();
         GameInit();
-        
+
         startColor = getUpCover.color;
     }
 

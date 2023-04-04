@@ -21,7 +21,7 @@ public class DestroyObjects : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider other) 
+    private void OnTriggerEnter(Collider other)
     {
         for (int i = 0; i < toolBar.Length; i++)
         {

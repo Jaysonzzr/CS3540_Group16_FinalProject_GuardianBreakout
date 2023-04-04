@@ -158,7 +158,14 @@ public class PlayerBehavior : MonoBehaviour
         {
             hurted = true;
             hurtDirection = other.gameObject.transform.forward;
-            GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth -= other.transform.parent.GetComponent<NPCBehavior>().npcDamage;
+            if (other.transform.parent.GetComponent<NPCBehavior>())
+            {
+                GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth -= other.transform.parent.GetComponent<NPCBehavior>().npcDamage;
+            }
+            else
+            {
+                GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentHealth -= other.transform.parent.GetComponent<GuardBehavior>().npcDamage;
+            }
             other.enabled = false;
         }
 
