@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class CameraController : MonoBehaviour
 {
     public GameObject player;
     Vector3 offset;
-    public float sensitivity = 2.0f;
+
+    public GamePref gamePref;
+
+    float sensitivity;
     public float smoothing = 2.0f;
 
     private Vector2 mouseLook;
@@ -25,6 +29,8 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        sensitivity = gamePref.sensitivity;
+
         // Get the mouse input and calculate the camera movement
         Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
         mouseDelta = Vector2.Scale(mouseDelta, new Vector2(sensitivity * smoothing, sensitivity * smoothing));

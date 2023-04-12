@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MainMenuControll : MonoBehaviour
 {
-    public GameObject levelChoose;
+    public GameObject[] canvas;
 
     // Start is called before the first frame update
     void Start()
@@ -15,11 +15,14 @@ public class MainMenuControll : MonoBehaviour
 
     void Update() 
     {
-        if (levelChoose.activeSelf)
+        foreach (GameObject canvas in canvas)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (canvas.activeSelf)
             {
-                levelChoose.SetActive(false);
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    canvas.SetActive(false);
+                }
             }
         }
     }

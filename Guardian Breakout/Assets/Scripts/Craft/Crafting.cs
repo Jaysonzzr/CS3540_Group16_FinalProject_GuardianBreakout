@@ -112,7 +112,8 @@ public class Crafting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             if (slot.transform.childCount > 0)
             {
-                inventory.Add(slot.transform.GetChild(0).name);
+                string objectName = slot.transform.GetChild(0).name.Replace("(Clone)", "").Trim();
+                inventory.Add(objectName);
             }
         }
 
@@ -140,11 +141,14 @@ public class Crafting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             for (int n = 0; n < inventorySlots.Length; n++)
             {
-                if (inventorySlots[n].transform.childCount > 0 && 
-                    inventorySlots[n].transform.GetChild(0).name == targetSlots[i].transform.GetChild(0).name)
-                {   
-                    Destroy(inventorySlots[n].transform.GetChild(0).gameObject);
-                    break;
+                if (inventorySlots[n].transform.childCount > 0)
+                {
+                    string objectName = inventorySlots[n].transform.GetChild(0).name.Replace("(Clone)", "").Trim();
+                    if (objectName == targetSlots[i].transform.GetChild(0).name)
+                    {
+                        Destroy(inventorySlots[n].transform.GetChild(0).gameObject);
+                        break;
+                    }
                 }
             }
         }
