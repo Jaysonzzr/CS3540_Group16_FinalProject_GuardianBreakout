@@ -21,7 +21,7 @@ public class MissionRequires : MonoBehaviour
 
             if (transform.GetChild(0).transform.childCount > 0)
             {
-                if (transform.GetChild(0).transform.GetChild(0).name == require)
+                if (transform.GetChild(0).transform.GetChild(0).name == require || transform.GetChild(0).transform.GetChild(0).name == require + "(Clone)")
                 {
                     transform.parent.Find("Finish").GetComponent<FinishMission>().couldFinish = true;
                 }
