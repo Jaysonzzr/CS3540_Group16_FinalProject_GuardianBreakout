@@ -680,6 +680,7 @@ public class ObjectsInteractive : MonoBehaviour
                 if (currentProcess >= 100)
                 {
                     Destroy(inventoryManager.holding);
+                    inventoryManager.holdStuff = false;
                     currentProcess = -1;
                 }
                 else if (currentProcess >= 0 && currentProcess < 100)

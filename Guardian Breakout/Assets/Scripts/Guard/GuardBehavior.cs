@@ -304,7 +304,6 @@ public class GuardBehavior : MonoBehaviour
             currentState = NPCStates.Chase;
         }
 
-        Debug.Log("Distance to player:" + distanceToPlayer + ", " + chaseDistance);
         FaceTarget(player.transform.position);
     }
 
@@ -338,7 +337,6 @@ public class GuardBehavior : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 directionToPlayer = player.transform.position - enemyEyes.position;
-        Debug.Log(directionToPlayer);
 
         if (Vector3.Angle(directionToPlayer, enemyEyes.forward) <= fieldOfView)
         {

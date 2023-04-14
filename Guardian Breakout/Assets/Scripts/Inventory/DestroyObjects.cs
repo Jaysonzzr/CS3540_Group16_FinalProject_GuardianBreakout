@@ -23,14 +23,17 @@ public class DestroyObjects : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        for (int i = 0; i < toolBar.Length; i++)
+        if (other.CompareTag("Player"))
         {
-            if (toolBar[i].transform.childCount > 0)
+            for (int i = 0; i < toolBar.Length; i++)
             {
-                if (toolBar[i].transform.GetChild(0).name == objectName)
+                if (toolBar[i].transform.childCount > 0)
                 {
-                    inventoryManager.holdStuff = false;
-                    Destroy(toolBar[i].transform.GetChild(0).gameObject);
+                    if (toolBar[i].transform.GetChild(0).name == objectName)
+                    {
+                        inventoryManager.holdStuff = false;
+                        Destroy(toolBar[i].transform.GetChild(0).gameObject);
+                    }
                 }
             }
         }

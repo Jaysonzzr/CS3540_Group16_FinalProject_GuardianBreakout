@@ -105,7 +105,14 @@ public class WallBreaker : MonoBehaviour
                 }
 
                 pickaxe.localRotation = Quaternion.Lerp(pickaxe.localRotation, pickaxeRot, Time.deltaTime * 5);
-                pickaxeAnim.SetInteger("is_attacking", 0);
+
+                if (inventoryManager.Has("Pickaxe") || inventoryManager.Has("Pickaxe(Clone)"))
+                {
+                    if (pickaxeAnim.GetInteger("is_attacking") == 1)
+                    {
+                        pickaxeAnim.SetInteger("is_attacking", 0);
+                    }
+                }
             }
         }
     }

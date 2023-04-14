@@ -46,9 +46,12 @@ public class PlayerBehavior : MonoBehaviour
     {
         damageBonus = GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentStrength / 30;
 
-        if (inventoryManager.holdStuff && inventoryManager.holding.name == "Meal(Clone)")
+        if (inventoryManager.holdStuff)
         {
-            Camera.main.transform.Find("Plate").gameObject.SetActive(true);
+            if (inventoryManager.holding.name == "Meal(Clone)")
+            {
+                Camera.main.transform.Find("Plate").gameObject.SetActive(true);
+            }
         }
         else
         {
