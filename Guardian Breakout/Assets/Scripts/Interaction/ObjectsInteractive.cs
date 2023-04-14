@@ -213,6 +213,7 @@ public class ObjectsInteractive : MonoBehaviour
                             player.GetComponent<PlayerBehavior>().getHurt = false;
                             playerController.enabled = false;
                             cameraController.enabled = false;
+                            Time.timeScale = 10.0f;
 
                             if (hitObject.CompareTag("BedB"))
                             {
@@ -531,6 +532,7 @@ public class ObjectsInteractive : MonoBehaviour
             {
                 GameObject.Find("LevelManager").GetComponent<InventoryManager>().lockLootBar = false;
                 GameObject.FindObjectOfType<PlayerStats>().lockStats = false;
+                Time.timeScale = 1.0f;
 
                 player.GetComponent<CharacterController>().enabled = true;
                 playerController.enabled = true;
