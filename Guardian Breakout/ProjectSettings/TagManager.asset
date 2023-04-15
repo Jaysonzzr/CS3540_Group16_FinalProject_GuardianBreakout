@@ -23,6 +23,9 @@ TagManager:
   - Win
   - guardWanderpoint
   - Timer
+  - Sensitivity
+  - BGMVolume
+  - GamePref
   layers:
   - Default
   - TransparentFX

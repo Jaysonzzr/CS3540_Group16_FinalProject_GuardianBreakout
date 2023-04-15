@@ -30,7 +30,7 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
-        timerText = GameObject.FindGameObjectWithTag("Timer").GetComponent<Text>();
+        timerText = Utility.FindObjectByTagIncludingInactive("Timer").GetComponent<Text>();
 
         float elapsedTime = Time.unscaledTime - startTime;
         int minutes = (int)elapsedTime / 60;

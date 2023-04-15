@@ -11,7 +11,6 @@ public class PauseMenuManager : MonoBehaviour
 
     public TimeManager timeManager;
     public Text text;
-    public Text timer;
 
     // Start is called before the first frame update
     void Start()
@@ -45,10 +44,6 @@ public class PauseMenuManager : MonoBehaviour
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
-        Color c = timer.color;
-        c.a = 255f;
-        timer.color = c;
     }
 
     public void ResumeGame()
@@ -59,10 +54,6 @@ public class PauseMenuManager : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
-        Color c = timer.color;
-        c.a = 0f;
-        timer.color = c;
     }
 
     public void LoadMainMenu()

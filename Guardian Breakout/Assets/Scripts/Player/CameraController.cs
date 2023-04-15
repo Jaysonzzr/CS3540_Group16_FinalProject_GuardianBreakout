@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
     public GameObject player;
     Vector3 offset;
 
-    public GamePref gamePref;
+    private GamePref gamePref;
 
     float sensitivity;
     public float smoothing = 2.0f;
@@ -29,6 +29,8 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        gamePref = GameObject.FindGameObjectWithTag("GamePref").GetComponent<GamePref>();
+
         if (!PauseMenuManager.isGamePaused)
         {
             sensitivity = gamePref.sensitivity;
