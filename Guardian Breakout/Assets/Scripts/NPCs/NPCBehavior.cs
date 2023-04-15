@@ -274,7 +274,7 @@ public class NPCBehavior : MonoBehaviour
             currentState = NPCStates.Idle;
         }
 
-        FaceTarget(player.transform.position);
+        agent.SetDestination(player.transform.position);
     }
 
     void UpdateAttackState()
