@@ -1,3 +1,3 @@
-# CS3540_Group16_Final_Project
+# Guardian Breakout
 
 As you awaken, your eyes adjust to the harsh fluorescent lights, revealing the cold, unforgiving walls of a high-security prison. Confusion and fear grip you as you struggle to comprehend your predicament. Amidst the uncertainty, one thing is clear: you must escape this nightmarish confinement. With every step you take, new challenges and mysteries unfold, forcing you to adapt and strategize. Can you outwit your captors and break free from this hellish labyrinth? The clock is ticking, and your survival depends on it. Unravel the enigma and reclaim your freedom in this heart-pounding escape adventure.
