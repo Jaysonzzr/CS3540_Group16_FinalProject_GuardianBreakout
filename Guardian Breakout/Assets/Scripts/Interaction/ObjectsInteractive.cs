@@ -69,7 +69,23 @@ public class ObjectsInteractive : MonoBehaviour
 
     void Update()
     {
+        if (!PauseMenuManager.isGamePaused)
+        {
+            Interact();
 
+            if (locked)
+            {
+                Disinteract();
+            }
+        }
+        else
+        {
+            washSFX.Stop();
+        }
+    }
+
+    void Interact()
+    {
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
@@ -450,7 +466,7 @@ public class ObjectsInteractive : MonoBehaviour
                     {
                         infoText.enabled = true;
 
-                        if (inventoryManager.holdStuff && inventoryManager.holding.name == "Meal(Clone)")
+                        if (inventoryManager.holding != null && inventoryManager.holding.name == "Meal(Clone)")
                         {
                             infoText.text = hitObject.name + " (E)";
                             infoText.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
@@ -523,183 +539,183 @@ public class ObjectsInteractive : MonoBehaviour
             // Clear the information text if the player isn't looking at anything
             infoText.text = "";
         }
+    }
 
-        if (locked)
+    void Disinteract()
+    {
+        GameObject.Find("LevelManager").GetComponent<InventoryManager>().lockLootBar = true;
+
+        if ((Input.GetKeyDown(KeyCode.E) && coolDown <= 0) || player.GetComponent<PlayerBehavior>().getHurt)
         {
-            GameObject.Find("LevelManager").GetComponent<InventoryManager>().lockLootBar = true;
+            GameObject.Find("LevelManager").GetComponent<InventoryManager>().lockLootBar = false;
+            GameObject.FindObjectOfType<PlayerStats>().lockStats = false;
+            Time.timeScale = 1.0f;
 
-            if ((Input.GetKeyDown(KeyCode.E) && coolDown <= 0) || player.GetComponent<PlayerBehavior>().getHurt)
-            {
-                GameObject.Find("LevelManager").GetComponent<InventoryManager>().lockLootBar = false;
-                GameObject.FindObjectOfType<PlayerStats>().lockStats = false;
-                Time.timeScale = 1.0f;
+            player.GetComponent<CharacterController>().enabled = true;
+            playerController.enabled = true;
+            cameraController.enabled = true;
 
-                player.GetComponent<CharacterController>().enabled = true;
-                playerController.enabled = true;
-                cameraController.enabled = true;
+            locked = false;
 
-                locked = false;
-
-                player.GetComponent<PlayerBehavior>().getHurt = false;
-                GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
-                currentProcess = 0.0f;
-
-                if (exercising)
-                {
-                    exercising = false;
-                    myCanvas.transform.Find("PlayerStats").gameObject.SetActive(false);
-                    Camera.main.transform.Find("Barbell").gameObject.SetActive(false);
-                    exerciseText.gameObject.SetActive(false);
-                    processBar.gameObject.SetActive(false);
-                }
-
-                if (reading)
-                {
-                    reading = false;
-                    myCanvas.transform.Find("PlayerStats").gameObject.SetActive(false);
-                    Camera.main.transform.Find("Book").gameObject.SetActive(false);
-                    readText.gameObject.SetActive(false);
-                    readKeyText.gameObject.SetActive(false);
-                    processBar.gameObject.SetActive(false);
-                }
-
-                if (eating)
-                {
-                    eating = false;
-                    myCanvas.transform.Find("PlayerStats").gameObject.SetActive(false);
-                    Camera.main.transform.Find("Plate").gameObject.SetActive(true);
-                    processBar.gameObject.SetActive(false);
-
-                    if (inventoryManager.holdStuff)
-                    {
-                        Destroy(inventoryManager.holding);
-                        inventoryManager.holdStuff = false;
-                    }
-                }
-
-                if (showering)
-                {
-                    showering = false;
-                    washSFX.Stop();
-                    Destroy(shower, 5 * Time.deltaTime);
-                }
-            }
-            else if (coolDown > 0)
-            {
-                coolDown -= Time.deltaTime;
-            }
-
+            player.GetComponent<PlayerBehavior>().getHurt = false;
+            GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
+            currentProcess = 0.0f;
+                
             if (exercising)
             {
-                infoText.enabled = false;
-                exerciseText.gameObject.SetActive(true);
-                processBar.gameObject.SetActive(true);
-                processBar.value = currentProcess;
-
-                GameObject.FindObjectOfType<PlayerStats>().lockStats = true;
-                myCanvas.transform.Find("PlayerStats").gameObject.SetActive(true);
-
-                Transform barbell = Camera.main.transform.Find("Barbell").transform;
-                float barbellPos = -0.15f + (0.3f * (currentProcess / 100)) + Camera.main.transform.position.y;
-
-                barbell.position = new Vector3(barbell.position.x, barbellPos, barbell.position.z);
-
-                if (Input.GetKeyDown(KeyCode.Q))
-                {
-                    currentProcess += 800 * Time.deltaTime;
-                }
-
-                if (currentProcess > 0)
-                {
-                    currentProcess -= 5 * Time.deltaTime;
-                }
-
-                if (currentProcess >= 100)
-                {
-                    currentProcess = 0.0f;
-                    GameObject.FindObjectOfType<PlayerStats>().currentStrength += 2;
-                }
+                exercising = false;
+                myCanvas.transform.Find("PlayerStats").gameObject.SetActive(false);
+                Camera.main.transform.Find("Barbell").gameObject.SetActive(false);
+                exerciseText.gameObject.SetActive(false);
+                processBar.gameObject.SetActive(false);
             }
 
             if (reading)
             {
-                infoText.enabled = false;
-                readText.gameObject.SetActive(true);
-                readKeyText.gameObject.SetActive(true);
-                processBar.gameObject.SetActive(true);
-                processBar.value = currentProcess;
-
-                GameObject.FindObjectOfType<PlayerStats>().lockStats = true;
-                myCanvas.transform.Find("PlayerStats").gameObject.SetActive(true);
-
-                string[] keys = { "Q", "B", "Y", "P" };
-
-                string randomKey = keys[randomIndex];
-
-                readKeyText.text = randomKey;
-
-                if (Input.anyKeyDown)
-                {
-                    foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode)))
-                    {
-                        if (Input.GetKeyDown(keyCode))
-                        {
-                            if (keyCode.ToString() == randomKey)
-                            {
-                                currentProcess += 1000 * Time.deltaTime;
-                                randomIndex = UnityEngine.Random.Range(0, 4);
-                            }
-                        }
-                    }
-                }
-
-                if (currentProcess > 0)
-                {
-                    currentProcess -= 5 * Time.deltaTime;
-                }
-
-                if (currentProcess >= 100)
-                {
-                    currentProcess = 0.0f;
-                    GameObject.FindObjectOfType<PlayerStats>().currentIntellect += 2;
-                }
+                reading = false;
+                myCanvas.transform.Find("PlayerStats").gameObject.SetActive(false);
+                Camera.main.transform.Find("Book").gameObject.SetActive(false);
+                readText.gameObject.SetActive(false);
+                readKeyText.gameObject.SetActive(false);
+                processBar.gameObject.SetActive(false);
             }
 
             if (eating)
             {
-                infoText.enabled = false;
-                processBar.gameObject.SetActive(true);
-                processBar.value = currentProcess;
-
-                GameObject.FindObjectOfType<PlayerStats>().lockStats = true;
-                myCanvas.transform.Find("PlayerStats").gameObject.SetActive(true);
-
-                Transform plate = Camera.main.transform.Find("Plate").transform;
-                plate.position = new Vector3(plate.position.x, Camera.main.transform.position.y - 0.4f, plate.position.z);
-
-                if (currentProcess >= 100)
+                eating = false;
+                myCanvas.transform.Find("PlayerStats").gameObject.SetActive(false);
+                Camera.main.transform.Find("Plate").gameObject.SetActive(true);
+                processBar.gameObject.SetActive(false);
+                    
+                if (inventoryManager.holdStuff)
                 {
                     Destroy(inventoryManager.holding);
                     inventoryManager.holdStuff = false;
-                    currentProcess = -1;
-                }
-                else if (currentProcess >= 0 && currentProcess < 100)
-                {
-                    currentProcess += 5 * Time.deltaTime;
-
-                    currentEatingTime += Time.deltaTime;
-                    if (currentEatingTime > eatIncreaseTime && GameObject.FindObjectOfType<PlayerStats>().currentHealth <= 96)
-                    {
-                        currentEatingTime = 0.0f;
-                        GameObject.FindObjectOfType<PlayerStats>().currentHealth += 4;
-                    }
                 }
             }
 
             if (showering)
             {
-                infoText.enabled = false;
+                showering = false;
+                washSFX.Stop();
+                Destroy(shower, 5 * Time.deltaTime);
             }
+        }
+        else if (coolDown > 0)
+        {
+            coolDown -= Time.deltaTime;
+        }
+
+        if (exercising)
+        {
+            infoText.enabled = false;
+            exerciseText.gameObject.SetActive(true);
+            processBar.gameObject.SetActive(true);
+            processBar.value = currentProcess;
+
+            GameObject.FindObjectOfType<PlayerStats>().lockStats = true;
+            myCanvas.transform.Find("PlayerStats").gameObject.SetActive(true);
+
+            Transform barbell = Camera.main.transform.Find("Barbell").transform;
+            float barbellPos = -0.15f + (0.3f * (currentProcess / 100)) + Camera.main.transform.position.y;
+
+            barbell.position = new Vector3(barbell.position.x, barbellPos, barbell.position.z);
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                currentProcess += 800 * Time.deltaTime;
+            }
+
+            if (currentProcess > 0)
+            {
+                currentProcess -= 5 * Time.deltaTime;
+            }
+
+            if (currentProcess >= 100)
+            {
+                currentProcess = 0.0f;
+                GameObject.FindObjectOfType<PlayerStats>().currentStrength += 2;
+            }
+        }
+
+        if (reading)
+        {
+            infoText.enabled = false;
+            readText.gameObject.SetActive(true);
+            readKeyText.gameObject.SetActive(true);
+            processBar.gameObject.SetActive(true);
+            processBar.value = currentProcess;
+
+            GameObject.FindObjectOfType<PlayerStats>().lockStats = true;
+            myCanvas.transform.Find("PlayerStats").gameObject.SetActive(true);
+                
+            string[] keys = { "Q", "B", "Y", "P" };
+
+            string randomKey = keys[randomIndex];
+
+            readKeyText.text = randomKey;
+
+            if (Input.anyKeyDown)
+            {
+                foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode)))
+                {
+                    if (Input.GetKeyDown(keyCode))
+                    {
+                        if (keyCode.ToString() == randomKey)
+                        {
+                            currentProcess += 1000 * Time.deltaTime;
+                            randomIndex = UnityEngine.Random.Range(0, 4);
+                        }
+                    }
+                }
+            }
+
+            if (currentProcess > 0)
+            {
+                currentProcess -= 5 * Time.deltaTime;
+            }
+
+            if (currentProcess >= 100)
+            {
+                currentProcess = 0.0f;
+                GameObject.FindObjectOfType<PlayerStats>().currentIntellect += 2;
+            }
+        }
+
+        if (eating)
+        {
+            infoText.enabled = false;
+            processBar.gameObject.SetActive(true);
+            processBar.value = currentProcess;
+
+            GameObject.FindObjectOfType<PlayerStats>().lockStats = true;
+            myCanvas.transform.Find("PlayerStats").gameObject.SetActive(true);
+
+            Transform plate = Camera.main.transform.Find("Plate").transform;
+            plate.position = new Vector3(plate.position.x, Camera.main.transform.position.y - 0.4f, plate.position.z);
+
+            if (currentProcess >= 100)
+            {
+                Destroy(inventoryManager.holding);
+                inventoryManager.holdStuff = false;
+                currentProcess = -1;
+            }
+            else if (currentProcess >= 0 && currentProcess < 100)
+            {
+                currentProcess += 5 * Time.deltaTime;
+
+                currentEatingTime += Time.deltaTime;
+                if (currentEatingTime > eatIncreaseTime && GameObject.FindObjectOfType<PlayerStats>().currentHealth <= 96)
+                {
+                    currentEatingTime = 0.0f;
+                    GameObject.FindObjectOfType<PlayerStats>().currentHealth += 4;
+                }
+            }
+        }
+
+        if (showering)
+        {
+            infoText.enabled = false;
         }
     }
 }

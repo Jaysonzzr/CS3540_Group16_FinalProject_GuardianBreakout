@@ -439,21 +439,4 @@ public class NPCBehavior : MonoBehaviour
         }
         return false;
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        //Gizmos.DrawWireSphere(transform.position, attackDistance);
-
-        Gizmos.color = Color.green;
-        //Gizmos.DrawWireSphere(transform.position, chaseDistance);
-
-        Vector3 frontRayPoint = enemyEyes.position + (enemyEyes.forward * chaseDistance);
-        Vector3 leftRayPoint = Quaternion.Euler(0, fieldOfView * 0.5f, 0) * frontRayPoint;
-        Vector3 rightRayPoint = Quaternion.Euler(0, -fieldOfView * 0.5f, 0) * frontRayPoint;
-
-        Debug.DrawLine(enemyEyes.position, frontRayPoint, Color.cyan);
-        Debug.DrawLine(enemyEyes.position, leftRayPoint, Color.yellow);
-        Debug.DrawLine(enemyEyes.position, rightRayPoint, Color.yellow);
-    }
 }

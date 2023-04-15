@@ -50,36 +50,39 @@ public class PlayerStats : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GameObject obj = myCanvas.transform.Find("PlayerStats").gameObject;
-        if (obj.activeSelf)
+        if (!PauseMenuManager.isGamePaused)
         {
-            if (Input.GetKeyDown(KeyCode.V) && !lockStats)
+            GameObject obj = myCanvas.transform.Find("PlayerStats").gameObject;
+            if (obj.activeSelf)
             {
-                obj.SetActive(false);
-                AudioSource.PlayClipAtPoint(closeUISFX, Camera.main.transform.position);
+                if (Input.GetKeyDown(KeyCode.V) && !lockStats)
+                {
+                    obj.SetActive(false);
+                    AudioSource.PlayClipAtPoint(closeUISFX, Camera.main.transform.position);
 
-                lockUI = false;
+                    lockUI = false;
+                }
             }
-        }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.V) && !lockUI)
+            else
             {
-                obj.SetActive(true);
-                AudioSource.PlayClipAtPoint(openUISFX, Camera.main.transform.position);
+                if (Input.GetKeyDown(KeyCode.V) && !lockUI)
+                {
+                    obj.SetActive(true);
+                    AudioSource.PlayClipAtPoint(openUISFX, Camera.main.transform.position);
 
-                lockUI = true;
+                    lockUI = true;
+                }
             }
-        }
 
-        if (currentHealth <= 0)
-        {
-            isDead = true;
-        }
+            if (currentHealth <= 0)
+            {
+                isDead = true;
+            }
 
-        playerHealth.text = currentHealth.ToString();
-        playerStrngth.text = currentStrength.ToString();
-        playerIntellect.text = currentIntellect.ToString();
-        playerMoney.text = currentMoney.ToString();
+            playerHealth.text = currentHealth.ToString();
+            playerStrngth.text = currentStrength.ToString();
+            playerIntellect.text = currentIntellect.ToString();
+            playerMoney.text = currentMoney.ToString();
+        }
     }
 }

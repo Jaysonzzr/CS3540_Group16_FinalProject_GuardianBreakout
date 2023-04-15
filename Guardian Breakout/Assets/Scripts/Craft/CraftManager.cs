@@ -29,50 +29,53 @@ public class CraftManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GameObject obj = myCanvas.transform.Find("CraftTable").gameObject;
-        if (obj.activeSelf)
+        if (!PauseMenuManager.isGamePaused)
         {
-            if (Input.GetKeyDown(KeyCode.C) || GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt)
+            GameObject obj = myCanvas.transform.Find("CraftTable").gameObject;
+            if (obj.activeSelf)
             {
-                obj.SetActive(false);
-                AudioSource.PlayClipAtPoint(closeUISFX, Camera.main.transform.position);
-                itemInfo.text = "";
-                playerController.enabled = true;
-                cameraController.enabled = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-
-                crafting = false;
-
-                GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
-                GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;
-
-                GameObject tables = myCanvas.transform.Find("CraftTable/Items/Crafts").gameObject;
-
-                for (int i = 0; i < tables.transform.childCount; i++)
+                if (Input.GetKeyDown(KeyCode.C) || GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt)
                 {
-                    if (tables.transform.GetChild(i).gameObject.activeSelf)
+                    obj.SetActive(false);
+                    AudioSource.PlayClipAtPoint(closeUISFX, Camera.main.transform.position);
+                    itemInfo.text = "";
+                    playerController.enabled = true;
+                    cameraController.enabled = true;
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+
+                    crafting = false;
+
+                    GameObject.FindObjectOfType<PlayerStats>().lockUI = false;
+                    GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;
+
+                    GameObject tables = myCanvas.transform.Find("CraftTable/Items/Crafts").gameObject;
+
+                    for (int i = 0; i < tables.transform.childCount; i++)
                     {
-                        tables.transform.GetChild(i).gameObject.SetActive(false);
+                        if (tables.transform.GetChild(i).gameObject.activeSelf)
+                        {
+                            tables.transform.GetChild(i).gameObject.SetActive(false);
+                        }
                     }
                 }
             }
-        }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.C) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
+            else
             {
-                obj.SetActive(true);
-                AudioSource.PlayClipAtPoint(openUISFX, Camera.main.transform.position);
-                playerController.enabled = false;
-                cameraController.enabled = false;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                if (Input.GetKeyDown(KeyCode.C) && !GameObject.FindObjectOfType<PlayerStats>().lockUI)
+                {
+                    obj.SetActive(true);
+                    AudioSource.PlayClipAtPoint(openUISFX, Camera.main.transform.position);
+                    playerController.enabled = false;
+                    cameraController.enabled = false;
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
 
-                crafting = true;
+                    crafting = true;
 
-                GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
-                GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;
+                    GameObject.FindObjectOfType<PlayerStats>().lockUI = true;
+                    GameObject.FindWithTag("Player").GetComponent<PlayerBehavior>().getHurt = false;
+                }
             }
         }
     }

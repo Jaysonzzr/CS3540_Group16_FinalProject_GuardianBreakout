@@ -18,6 +18,7 @@ public class OnMouseOverTradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
     bool entering = false;
     bool affordable = false;
     bool unlock = false;
+    bool dead = false;
     int costTime = 1;
 
     public AudioClip sellSFX;
@@ -68,7 +69,7 @@ public class OnMouseOverTradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
             string npcName = transform.parent.parent.parent.name;
             if (GameObject.Find("NPCs/" + npcName).gameObject.GetComponent<NPCBehavior>().currentState == NPCBehavior.NPCStates.Dead)
             {
-                unlock = true;
+                dead = true;
             }
             else if (Input.GetMouseButtonDown(0) && affordable)
             {
@@ -95,6 +96,21 @@ public class OnMouseOverTradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
             {
                 GameObject.FindObjectOfType<PlayerStats>().currentMoney -= cost;
                 costTime--;
+            }
+        }
+
+        if (dead)
+        {
+            infoImage.SetActive(false);
+            image.color = originColor;
+
+            if (transform.childCount > 0)
+            {
+                transform.GetChild(0).GetComponent<DraggableItem>().enabled = true;
+            }
+            else
+            {
+                GetComponent<InventorySlot>().enabled = false;
             }
         }
     }

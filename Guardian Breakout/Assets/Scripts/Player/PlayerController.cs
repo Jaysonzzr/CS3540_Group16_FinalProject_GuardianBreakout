@@ -43,10 +43,13 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayerMovement();
-        PlayerAttack();
+        if (!PauseMenuManager.isGamePaused)
+        {
+            PlayerMovement();
+            PlayerAttack();
 
-        currentAttackTime += Time.deltaTime;
+            currentAttackTime += Time.deltaTime;
+        }
     }
 
     void PlayerMovement()

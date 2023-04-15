@@ -29,23 +29,26 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        sensitivity = gamePref.sensitivity;
+        if (!PauseMenuManager.isGamePaused)
+        {
+            sensitivity = gamePref.sensitivity;
 
-        // Get the mouse input and calculate the camera movement
-        Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-        mouseDelta = Vector2.Scale(mouseDelta, new Vector2(sensitivity * smoothing, sensitivity * smoothing));
-        smoothV.x = Mathf.Lerp(smoothV.x, mouseDelta.x, 1f / smoothing);
-        smoothV.y = Mathf.Lerp(smoothV.y, mouseDelta.y, 1f / smoothing);
-        mouseLook += smoothV;
+            // Get the mouse input and calculate the camera movement
+            Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+            mouseDelta = Vector2.Scale(mouseDelta, new Vector2(sensitivity * smoothing, sensitivity * smoothing));
+            smoothV.x = Mathf.Lerp(smoothV.x, mouseDelta.x, 1f / smoothing);
+            smoothV.y = Mathf.Lerp(smoothV.y, mouseDelta.y, 1f / smoothing);
+            mouseLook += smoothV;
 
-        // Clamp the vertical camera movement to prevent flipping
-        mouseLook.y = Mathf.Clamp(mouseLook.y, -90f, 90f);
+            // Clamp the vertical camera movement to prevent flipping
+            mouseLook.y = Mathf.Clamp(mouseLook.y, -90f, 90f);
 
-        // Apply the camera rotation
-        transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
-        player.transform.localRotation = Quaternion.AngleAxis(mouseLook.x, player.transform.up);
+            // Apply the camera rotation
+            transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
+            player.transform.localRotation = Quaternion.AngleAxis(mouseLook.x, player.transform.up);
 
-        // Move the camera to follow the player
-        transform.position = player.transform.position + offset;
+            // Move the camera to follow the player
+            transform.position = player.transform.position + offset;
+        }
     }
 }

@@ -27,6 +27,8 @@ public class TimeManager : MonoBehaviour
     };
     public State currentState;
 
+    public int trappedDay = 0;
+
     void Start()
     {
         // Initialize the clock time
@@ -72,6 +74,7 @@ public class TimeManager : MonoBehaviour
                 scheduleText.text = "Lights Out";
                 if (currentTime.Hour == 7)
                 {
+                    trappedDay++;
                     currentState = State.WakeRoll;
                     AudioSource.PlayClipAtPoint(bellSFX, Camera.main.transform.position);
                 }

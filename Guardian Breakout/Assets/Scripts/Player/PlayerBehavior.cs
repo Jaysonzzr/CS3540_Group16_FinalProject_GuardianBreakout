@@ -46,7 +46,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         damageBonus = GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentStrength / 30;
 
-        if (inventoryManager.holdStuff)
+        if (inventoryManager.holding != null)
         {
             if (inventoryManager.holding.name == "Meal(Clone)")
             {
@@ -58,25 +58,31 @@ public class PlayerBehavior : MonoBehaviour
             Camera.main.transform.Find("Plate").gameObject.SetActive(false);
         }
 
-        if (inventoryManager.holdStuff && (inventoryManager.holding.name == "Pickaxe" ||
-            inventoryManager.holding.name == "Pickaxe(Clone)"))
+        if (inventoryManager.holding != null)
         {
-            Camera.main.transform.Find("Pickaxe").gameObject.SetActive(true);
+            if (inventoryManager.holding.name == "Pickaxe" ||
+                inventoryManager.holding.name == "Pickaxe(Clone)")
+            {
+                Camera.main.transform.Find("Pickaxe").gameObject.SetActive(true);
+            }
         }
         else
         {
             Camera.main.transform.Find("Pickaxe").gameObject.SetActive(false);
         }
 
-        if (inventoryManager.holdStuff && (inventoryManager.holding.name == "Crowbar" ||
-            inventoryManager.holding.name == "Crowbar(Clone)"))
+        if (inventoryManager.holding != null)
         {
-            Camera.main.transform.Find("Crowbar").gameObject.SetActive(true);
-
-            damage = Mathf.RoundToInt(40 * damageBonus);
-            if (GetComponent<PlayerController>().enabled)
+            if (inventoryManager.holding.name == "Crowbar" ||
+                inventoryManager.holding.name == "Crowbar(Clone)")
             {
-                GetComponent<PlayerController>().PlayerCrowbarAttack();
+                Camera.main.transform.Find("Crowbar").gameObject.SetActive(true);
+
+                damage = Mathf.RoundToInt(40 * damageBonus);
+                if (GetComponent<PlayerController>().enabled)
+                {
+                    GetComponent<PlayerController>().PlayerCrowbarAttack();
+                }
             }
         }
         else

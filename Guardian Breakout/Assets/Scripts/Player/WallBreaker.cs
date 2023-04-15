@@ -42,7 +42,7 @@ public class WallBreaker : MonoBehaviour
             GameObject hitObject = hit.transform.gameObject;
             if (hitObject.CompareTag("Breakable") && hit.distance <= maxDistance)
             {
-                if (inventoryManager.holdStuff && (inventoryManager.holding.name == "Pickaxe" || inventoryManager.holding.name == "Pickaxe(Clone)"))
+                if (inventoryManager.holding != null && (inventoryManager.holding.name == "Pickaxe" || inventoryManager.holding.name == "Pickaxe(Clone)"))
                 {
                     // If the breakable object changed, reset the process
                     if (lastBreakableObject != null && lastBreakableObject != hitObject)
