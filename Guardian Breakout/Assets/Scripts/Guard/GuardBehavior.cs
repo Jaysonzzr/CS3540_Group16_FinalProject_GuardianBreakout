@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GuardBehavior : MonoBehaviour
 {
     InventoryManager inventoryManager;
+
+    NavMeshAgent agent;
 
     public enum NPCStates
     {
@@ -68,10 +71,10 @@ public class GuardBehavior : MonoBehaviour
     {
         inventoryManager = GameObject.Find("LevelManager").GetComponent<InventoryManager>();
         player = GameObject.FindWithTag("Player");
-        wanderPoints = GameObject.FindGameObjectsWithTag("guardWanderpoint");
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         damageBox = transform.Find("DamageBox").GetComponent<BoxCollider>();
+        agent = GetComponent<NavMeshAgent>();
         currentState = NPCStates.Patrol;
         FindNextPoint();
 
@@ -154,19 +157,24 @@ public class GuardBehavior : MonoBehaviour
     void UpdatePatrolState()
     {
         anim.SetInteger("animState", 1);
+
+        agent.stoppingDistance = 0;
+
+        agent.speed = 3f;
         
         if (Vector3.Distance(transform.position, nextDestination) < 3)
         {
             FindNextPoint();
         }
         
-        FaceTarget(nextDestination);
-
         if (distanceToPlayer < chaseDistance && IsPlayerInClearFOV())
         {
             currentState = NPCStates.Alert;
             FaceTarget(player.transform.position);
         }
+
+        // FaceTarget(nextDestination);
+        agent.SetDestination(nextDestination);
     }
 
     void UpdateSitState()
@@ -191,7 +199,7 @@ public class GuardBehavior : MonoBehaviour
         hurtTime += Time.deltaTime;
         if (hurtTime > animDuration)
         {
-            currentState = NPCStates.Attack;
+            currentState = NPCStates.Chase;
         }
 
         FaceTarget(player.transform.position);
@@ -205,12 +213,13 @@ public class GuardBehavior : MonoBehaviour
         {
             currentState = NPCStates.Attack;
         }
-        else if (distanceToPlayer > chaseDistance * 2)
+        else if (distanceToPlayer > (chaseDistance * 3))
         {
             currentState = NPCStates.Patrol;
         }
 
-        FaceTarget(player.transform.position);
+        // FaceTarget(player.transform.position);
+        agent.SetDestination(player.transform.position);
     }
 
     void UpdateAttackState()
@@ -266,7 +275,7 @@ public class GuardBehavior : MonoBehaviour
             if (viewportPos.x < 0 || viewportPos.x > 1 || viewportPos.y < 0 || viewportPos.y > 1)
             {
                 // transform.position = new Vector3(0, 0, 0);
-                currentState = NPCStates.Idle;
+                currentState = NPCStates.Patrol;
             }
         }
 
@@ -296,7 +305,6 @@ public class GuardBehavior : MonoBehaviour
         }
         else if (distanceToPlayer > chaseDistance && IsPlayerInClearFOV())
         {
-            Debug.Log("back to normal");
             currentState = NPCStates.Patrol;
         }
         else if (objectsInteractive.opening && IsPlayerInClearFOV())
