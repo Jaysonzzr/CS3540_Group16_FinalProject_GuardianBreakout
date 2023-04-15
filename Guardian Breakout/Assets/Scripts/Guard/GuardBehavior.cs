@@ -145,6 +145,11 @@ public class GuardBehavior : MonoBehaviour
             hasDead = true;
             currentState = NPCStates.Dead;
         }
+
+        if (IsPlayerInClearFOV() && player.GetComponent<PlayerBehavior>().isInGuardOffice)
+        {
+            currentState = NPCStates.Chase;
+        }
     }
 
     void UpdateIdleState()

@@ -18,6 +18,8 @@ public class PlayerBehavior : MonoBehaviour
     public int damage;
     public float damageBonus;
 
+    public bool isInGuardOffice;
+
     private float bounceBackEndTime = 0f;
     CharacterController controller;
     InventoryManager inventoryManager;
@@ -44,6 +46,15 @@ public class PlayerBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isInGuardOffice)
+        {
+            print("IN");
+        }
+        else
+        {
+            print("Out");
+        }
+
         damageBonus = GameObject.Find("LevelManager").GetComponent<PlayerStats>().currentStrength / 30;
 
         if (inventoryManager.holding != null)
