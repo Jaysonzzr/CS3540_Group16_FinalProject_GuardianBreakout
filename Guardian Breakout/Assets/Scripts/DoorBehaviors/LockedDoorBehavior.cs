@@ -42,7 +42,8 @@ public class LockedDoorBehavior : MonoBehaviour
     {
         nearbyCharacters = 0;
 
-        if (inventoryManager.Has(keyName) || inventoryManager.Has(keyName + "(Clone)"))
+        if (inventoryManager.Has(keyName) || inventoryManager.Has(keyName + "(Clone)") ||
+            player.GetComponent<PlayerBehavior>().isInDetectZone)
         {
             CheckProximity(player);
         }

@@ -64,7 +64,7 @@ public class GuardBehavior : MonoBehaviour
     public AudioClip deadSFX2;
 
     public Transform enemyEyes;
-    public float fieldOfView = 60;
+    public float fieldOfView = 90;
 
     // Start is called before the first frame update
     void Start()
@@ -146,7 +146,7 @@ public class GuardBehavior : MonoBehaviour
             currentState = NPCStates.Dead;
         }
 
-        if (IsPlayerInClearFOV() && player.GetComponent<PlayerBehavior>().isInGuardOffice)
+        if (IsPlayerInClearFOV() && player.GetComponent<PlayerBehavior>().isInDetectZone)
         {
             currentState = NPCStates.Chase;
         }
@@ -248,7 +248,7 @@ public class GuardBehavior : MonoBehaviour
         if (attackTime >= 0.7f * animDuration)
         {
             damageBox.enabled = true;
-            //Debug.Log("true");
+
             currentDuration = 0.0f;
             if (currentDuration > animDuration)
             {
@@ -279,7 +279,6 @@ public class GuardBehavior : MonoBehaviour
             // Check if the game object is outside the camera view.
             if (viewportPos.x < 0 || viewportPos.x > 1 || viewportPos.y < 0 || viewportPos.y > 1)
             {
-                // transform.position = new Vector3(0, 0, 0);
                 currentState = NPCStates.Patrol;
             }
         }
@@ -371,6 +370,12 @@ public class GuardBehavior : MonoBehaviour
     {
         nextDestination = wanderPoints[currentDestinationIndex].transform.position;
 
-        currentDestinationIndex = (currentDestinationIndex + 1) % wanderPoints.Length;
+        int newIndex;
+        do
+        {
+            newIndex = Random.Range(0, wanderPoints.Length);
+        } while (newIndex == currentDestinationIndex);
+
+        currentDestinationIndex = newIndex;
     }
 }
