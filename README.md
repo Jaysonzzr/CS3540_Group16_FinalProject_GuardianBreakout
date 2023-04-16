@@ -20,7 +20,7 @@ Developed in Unity 3D as a final project for CS3540, Guardian Breakout is a thri
 
 Developed by:
 
-- **[Designer and Programmer: Zhaorui Zhang](mailto:zhang.zhaoru@northeastern.edu)**
+- **Designer and Programmer:[Zhaorui Zhang](mailto:zhang.zhaoru@northeastern.edu)**
 - **[Art and Programmer: Tianyu Zhang](mailto:zhang.tianyu5@northeastern.edu)**
 - **[Programmer: Shengqi Li](mailto:li.shengq@northeastern.edu)**
 - **[Programmer: Yuyang Wei](mailto:wei.yuya@northeastern.edu)**
