@@ -307,7 +307,7 @@ public class GuardBehavior : MonoBehaviour
         {
             currentState = NPCStates.Chase;
         }
-        else if (distanceToPlayer > chaseDistance && IsPlayerInClearFOV())
+        else if (distanceToPlayer > chaseDistance)
         {
             currentState = NPCStates.Patrol;
         }
