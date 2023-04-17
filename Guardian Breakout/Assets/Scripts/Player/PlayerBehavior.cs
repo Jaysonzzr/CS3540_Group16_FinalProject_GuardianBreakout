@@ -54,6 +54,10 @@ public class PlayerBehavior : MonoBehaviour
             {
                 Camera.main.transform.Find("Plate").gameObject.SetActive(true);
             }
+            else
+            {
+                Camera.main.transform.Find("Plate").gameObject.SetActive(false);
+            }
         }
         else
         {
@@ -66,6 +70,10 @@ public class PlayerBehavior : MonoBehaviour
                 inventoryManager.holding.name == "Pickaxe(Clone)")
             {
                 Camera.main.transform.Find("Pickaxe").gameObject.SetActive(true);
+            }
+            else
+            {
+                Camera.main.transform.Find("Pickaxe").gameObject.SetActive(false);
             }
         }
         else
@@ -85,6 +93,15 @@ public class PlayerBehavior : MonoBehaviour
                 {
                     GetComponent<PlayerController>().PlayerCrowbarAttack();
                 }
+            }
+            else
+            {
+                GameObject crowbar = Camera.main.transform.Find("Crowbar").gameObject;
+                    
+                crowbar.transform.localPosition = crowbarPos;
+                crowbar.transform.localRotation = crowbarRot;
+                transform.GetComponent<PlayerController>().crwobarAttack = false;
+                crowbar.SetActive(false);
             }
         }
         else

@@ -302,7 +302,8 @@ public class GuardBehavior : MonoBehaviour
 
         // Will be modified from item name to tag
         if (inventoryManager.holdStuff && (inventoryManager.holding != null && 
-            (inventoryManager.holding.name == "Pickaxe" || inventoryManager.holding.name == "Crowbar")) &&
+            (inventoryManager.holding.name == "Pickaxe" || inventoryManager.holding.name == "Pickaxe(Clone)" ||
+            inventoryManager.holding.name == "Crowbar" || inventoryManager.holding.name == "Crowbar(Clone)")) &&
             IsPlayerInClearFOV())
         {
             currentState = NPCStates.Chase;
