@@ -2,14 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-// Use these lines to check the State
-/*
-    if (FindObjectOfType<TimeManager>().currentState == TimeManager.State.WakeRoll)
-    {
-        transform.position = new Vector3(0, 10, 0);
-    }
-*/
-
 public class TimeManager : MonoBehaviour
 {
     public Text clockText;

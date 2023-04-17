@@ -21,10 +21,4 @@ public class LockSlot : MonoBehaviour
             }
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

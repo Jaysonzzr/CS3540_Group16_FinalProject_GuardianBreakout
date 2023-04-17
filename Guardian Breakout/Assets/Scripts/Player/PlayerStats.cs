@@ -9,8 +9,6 @@ public class PlayerStats : MonoBehaviour
     public int startingStrength = 20;
     public int startingIntellect = 20;
     public int startingMoney = 0;
-
-    public int timeServed;
     
     public int currentHealth;
     public int currentStrength;
@@ -34,8 +32,6 @@ public class PlayerStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        timeServed = 0;
-
         currentHealth = startingHealth;
         currentStrength = startingStrength;
         currentIntellect = startingIntellect;

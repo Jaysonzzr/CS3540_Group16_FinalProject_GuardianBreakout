@@ -22,12 +22,6 @@ public class LevelManager : MonoBehaviour
         cameraController = Camera.main.GetComponent<CameraController>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void LevelBeat()
     {
         isGameOver = true;

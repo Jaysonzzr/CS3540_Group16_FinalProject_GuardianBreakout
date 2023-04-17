@@ -8,7 +8,6 @@ public class CraftManager : MonoBehaviour
     private PlayerController playerController;
     private CameraController cameraController;
 
-
     public Canvas myCanvas;
     public InventorySlot[] inventorySlots;
 

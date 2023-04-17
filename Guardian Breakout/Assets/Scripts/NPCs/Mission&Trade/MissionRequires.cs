@@ -6,12 +6,6 @@ public class MissionRequires : MonoBehaviour
 {
     public string require;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -21,7 +15,8 @@ public class MissionRequires : MonoBehaviour
 
             if (transform.GetChild(0).transform.childCount > 0)
             {
-                if (transform.GetChild(0).transform.GetChild(0).name == require || transform.GetChild(0).transform.GetChild(0).name == require + "(Clone)")
+                if (transform.GetChild(0).transform.GetChild(0).name == require || 
+                    transform.GetChild(0).transform.GetChild(0).name == require + "(Clone)")
                 {
                     transform.parent.Find("Finish").GetComponent<FinishMission>().couldFinish = true;
                 }
